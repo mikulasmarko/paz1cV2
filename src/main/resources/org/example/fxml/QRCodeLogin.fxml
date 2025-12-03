@@ -8,17 +8,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.En.QRcodeLoginEnController">
+<VBox fx:id="rootPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.QRCodeLoginController">
    <children>
-      <Label text="Sign in" VBox.vgrow="ALWAYS">
+      <Label fx:id="loginLabel" text="%label.login_title" VBox.vgrow="ALWAYS">
          <font>
-            <Font name="Comic Sans MS" size="50.0" />
+            <Font name="NeuzeitGro-Bol" size="50.0" />
          </font>
          <VBox.margin>
             <Insets top="-50.0" />
          </VBox.margin>
       </Label>
-      <Label prefHeight="26.0" prefWidth="400.0" text="Scan a QR code or enter manually:" VBox.vgrow="ALWAYS">
+      <Label fx:id="scanQrcodeLabel" prefHeight="26.0" prefWidth="400.0" text="%label.scan_qr" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets top="100.0" />
          </VBox.margin>
@@ -26,19 +26,19 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="inputNumberEn" maxWidth="400.0" promptText="Customer number">
+      <TextField fx:id="inputNumber" maxWidth="400.0" promptText="%prompt.customer_number">
          <VBox.margin>
             <Insets />
          </VBox.margin>
       </TextField>
       <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="cancelButtonEn" mnemonicParsing="false" prefWidth="100.0" text="Cancel">
+            <Button fx:id="cancelButton" mnemonicParsing="false" prefWidth="100.0" text="%button.cancel">
                <HBox.margin>
                   <Insets right="50.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="loginButtonEn" mnemonicParsing="false" prefWidth="100.0" text="Sign in">
+            <Button fx:id="loginButton" mnemonicParsing="false" prefWidth="100.0" text="%button.login_action">
                <HBox.margin>
                   <Insets top="20.0" />
                </HBox.margin>

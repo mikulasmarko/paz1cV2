@@ -7,14 +7,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.En.mainSceenEnController">
+<VBox fx:id="rootPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.MainScreenController">
    <children>
       <HBox alignment="TOP_RIGHT" fillHeight="false" maxHeight="50.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="enToSkButton" mnemonicParsing="false" text="SK/EN">
+            <Button fx:id="languageButton" mnemonicParsing="false" text="%button.language">
                <HBox.margin>
                   <Insets right="20.0" top="20.0" />
                </HBox.margin>
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="13.0" />
+               </font>
             </Button>
          </children>
          <VBox.margin>
@@ -25,30 +28,30 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="800.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label text="Something something idk" VBox.vgrow="ALWAYS">
+                  <Label fx:id="labelOperatingRules" text="%label.operating_rules" VBox.vgrow="ALWAYS">
                      <font>
-                        <Font size="40.0" />
+                        <Font name="NeuzeitGro-Bol" size="40.0" />
                      </font>
                   </Label>
-                  <Label text="JUMP Arena Košice">
+                  <Label fx:id="labelJumpArena" text="%label.jump_arena">
                      <font>
-                        <Font size="40.0" />
+                        <Font name="NeuzeitGro-Bol" size="40.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="30.0" />
                      </VBox.margin>
                   </Label>
-                  <Button fx:id="loginButtonEn" mnemonicParsing="false" prefWidth="150.0" text="Sign In">
+                  <Button fx:id="loginButton" mnemonicParsing="false" text="%button.login">
                      <font>
-                        <Font size="24.0" />
+                        <Font name="NeuzeitGro-Bol" size="24.0" />
                      </font>
                      <VBox.margin>
                         <Insets bottom="15.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="registrationButtonEn" mnemonicParsing="false" prefWidth="150.0" text="Register">
+                  <Button fx:id="registrationButton" mnemonicParsing="false" text="%button.registration">
                      <font>
-                        <Font size="24.0" />
+                        <Font name="NeuzeitGro-Bol" size="24.0" />
                      </font>
                   </Button>
                </children>
@@ -59,19 +62,25 @@
          <children>
             <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="settingsButtonEn" mnemonicParsing="false" prefWidth="80.0" text="Settings">
+                  <Button fx:id="settingsButton" mnemonicParsing="false" prefWidth="80.0" text="%button.settings">
                      <HBox.margin>
                         <Insets bottom="20.0" left="20.0" />
                      </HBox.margin>
+                     <font>
+                        <Font name="NeuzeitGro-Bol" size="12.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="themeButtonEn" mnemonicParsing="false" text="Dark/Light">
+                  <Button fx:id="themeButton" mnemonicParsing="false" text="%button.theme">
                      <HBox.margin>
                         <Insets bottom="20.0" right="20.0" />
                      </HBox.margin>
+                     <font>
+                        <Font name="NeuzeitGro-Bol" size="12.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>

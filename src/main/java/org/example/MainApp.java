@@ -9,12 +9,15 @@ import javafx.scene.Scene;
 public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        var loader = new FXMLLoader(getClass().getResource("/org/example/sk/mainScreenSk.fxml"));
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("messages", java.util.Locale.getDefault());
+        var loader = new FXMLLoader(getClass().getResource("/org/example/fxml/MainScreen.fxml"), bundle);
         Parent rootPane = loader.load();
 
         var scene = new Scene(rootPane);
         stage.setTitle("JUMPSYS");
         stage.setScene(scene);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreen(true);
         stage.show();
     }
 
