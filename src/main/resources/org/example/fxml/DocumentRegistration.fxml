@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.DocumentController">
+<VBox fx:id="rootPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.DocumentRegistrationController">
    <children>
       <HBox alignment="CENTER" prefHeight="338.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
@@ -38,7 +38,7 @@
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="cancelButton" mnemonicParsing="false" text="%button.cancel" />
-                        <Button fx:id="registerButton" mnemonicParsing="false" text="%button.register">
+                        <Button fx:id="registerButton" mnemonicParsing="false" text="%button.documentRegister">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin>

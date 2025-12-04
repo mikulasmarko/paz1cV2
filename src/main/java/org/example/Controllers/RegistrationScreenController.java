@@ -29,7 +29,7 @@ public class RegistrationScreenController {
     @FXML
     void initialize() {
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
-        nextButton.setOnAction(event -> switchScene("/org/example/fxml/Document.fxml"));
+        nextButton.setOnAction(event -> switchScene("/org/example/fxml/DocumentRegistration.fxml"));
         java.util.List<Label> labels = java.util.Arrays.asList(registrationLabel);
         java.util.List<Button> buttons = java.util.Arrays.asList(cancelButton, nextButton);
         ThemeManager.applyTheme(rootPane, labels, buttons, null);

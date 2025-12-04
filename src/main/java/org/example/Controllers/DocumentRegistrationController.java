@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class DocumentController {
+public class DocumentRegistrationController {
 
     @FXML
     private Button cancelButton;

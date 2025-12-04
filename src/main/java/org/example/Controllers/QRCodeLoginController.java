@@ -21,6 +21,9 @@ public class QRCodeLoginController {
     private TextField inputNumber;
 
     @FXML
+    private Button ducumentLoginButton;
+
+    @FXML
     private Button loginButton;
 
     @FXML
@@ -35,7 +38,7 @@ public class QRCodeLoginController {
     @FXML
     void initialize() {
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
-        loginButton.setOnAction(event -> switchScene("/org/example/fxml/LoginSuccess.fxml"));
+        loginButton.setOnAction(event -> switchScene("/org/example/fxml/DocumentLogin.fxml"));
         java.util.List<Label> labels = java.util.Arrays.asList(loginLabel, scanQrcodeLabel);
         java.util.List<Button> buttons = java.util.Arrays.asList(cancelButton, loginButton);
         ThemeManager.applyTheme(rootPane, labels, buttons, null);
