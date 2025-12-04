@@ -42,6 +42,7 @@ public class QRCodeLoginController {
         java.util.List<Label> labels = java.util.Arrays.asList(loginLabel, scanQrcodeLabel);
         java.util.List<Button> buttons = java.util.Arrays.asList(cancelButton, loginButton);
         ThemeManager.applyTheme(rootPane, labels, buttons, null);
+
     }
 
     private void switchScene(String fxmlPath) {

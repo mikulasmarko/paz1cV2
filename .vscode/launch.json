@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "IDELauncher",
+            "request": "launch",
+            "mainClass": "org.example.IDELauncher",
+            "projectName": "paz1cProject2025"
+        },
+        {
+            "type": "java",
+            "name": "MainApp",
+            "request": "launch",
+            "mainClass": "org.example.MainApp",
+            "projectName": "paz1cProject2025"
+        },
+        {
+            "type": "java",
+            "name": "QrCodeGeneratorDemo",
+            "request": "launch",
+            "mainClass": "org.example.QrCode.QrCodeGeneratorDemo",
+            "projectName": "paz1cProject2025"
+        },
+        {
+            "type": "java",
+            "name": "TestLocale",
+            "request": "launch",
+            "mainClass": "org.example.TestLocale",
+            "projectName": "paz1cProject2025"
+        },
+        {
+            "type": "java",
+            "name": "emailSender",
+            "request": "launch",
+            "mainClass": "org.example.eMail.emailSender",
+            "projectName": "paz1cProject2025"
+        }
+    ]
+}
