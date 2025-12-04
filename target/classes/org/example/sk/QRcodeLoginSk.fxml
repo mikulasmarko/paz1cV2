@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.Sk.QRcodeLoginSkController">
+   <children>
+      <Label text="Prihlásenie" VBox.vgrow="ALWAYS">
+         <font>
+            <Font name="Comic Sans MS" size="50.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="-50.0" />
+         </VBox.margin>
+      </Label>
+      <Label prefHeight="26.0" prefWidth="400.0" text="Naskenujte QR kód alebo zadajte ručne:" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets top="100.0" />
+         </VBox.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="inputNumberSk" maxWidth="400.0" promptText="Číslo zákazníka">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </TextField>
+      <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="cancelButtonSk" mnemonicParsing="false" prefWidth="100.0" text="Zrušiť">
+               <HBox.margin>
+                  <Insets right="50.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="loginButtonSk" mnemonicParsing="false" prefWidth="100.0" text="Prihlásiť sa">
+               <HBox.margin>
+                  <Insets top="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>
