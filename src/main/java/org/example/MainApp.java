@@ -6,10 +6,15 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+import org.example.storage.DatabaseManager;
 
 public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+
+        DatabaseManager dbManager = new DatabaseManager();
+        dbManager.initialize();
+
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("messages", java.util.Locale.getDefault());
         var loader = new FXMLLoader(getClass().getResource("/org/example/fxml/MainScreen.fxml"), bundle);
         Parent rootPane = loader.load();
