@@ -49,7 +49,18 @@ public class RegistrationScreenController {
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
         nextButton.setOnAction(event -> {
             if (validateFields()) {
-                switchScene("/org/example/fxml/DocumentRegistration.fxml");
+                org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
+                if (dbManager.registerPerson(
+                        firstNameField.getText(),
+                        lastNameField.getText(),
+                        emailField.getText(),
+                        phoneField.getText(),
+                        birthDateField.getValue())) {
+                    switchScene("/org/example/fxml/DocumentRegistration.fxml");
+                } else {
+                    showError("error.registration_failed"); // You might need to add this key or reuse an existing one,
+                                                            // or just show generic error
+                }
             }
         });
         java.util.List<Label> labels = java.util.Arrays.asList(registrationLabel);
@@ -67,6 +78,22 @@ public class RegistrationScreenController {
             showError("error.all_fields_required");
             return false;
         }
+
+        if (!emailField.getText().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            showError("error.invalid_email");
+            return false;
+        }
+
+        if (!phoneField.getText().matches("^\\+?[0-9]{10,13}$")) {
+            showError("error.invalid_phone");
+            return false;
+        }
+
+        if (new org.example.storage.DatabaseManager().isEmailExists(emailField.getText())) {
+            showError("error.email_exists");
+            return false;
+        }
+
         errorLabel.setVisible(false);
         return true;
     }
