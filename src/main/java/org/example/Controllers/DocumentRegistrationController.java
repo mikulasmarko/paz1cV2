@@ -49,7 +49,7 @@ public class DocumentRegistrationController {
 
         try {
             // Load PDF document
-            InputStream inputStream = getClass().getResourceAsStream("/org/example/documents/document.pdf");
+            InputStream inputStream = getClass().getResourceAsStream("/org/example/documents/prevadzkovyPoriadok2025.pdf");
             if (inputStream == null) {
                 System.err.println("PDF document not found!");
                 return;

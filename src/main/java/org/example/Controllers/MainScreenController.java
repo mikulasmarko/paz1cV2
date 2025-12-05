@@ -4,6 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import java.util.ResourceBundle;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.stage.StageStyle;
 
 public class MainScreenController {
 
@@ -46,6 +50,7 @@ public class MainScreenController {
         languageButton.setOnAction(event -> toggleLanguage());
         themeButton.setOnAction(event -> toggleTheme());
         applyTheme();
+        updateLanguageButtonIcon();
     }
 
     private void switchScene(String fxmlPath) {
@@ -70,6 +75,29 @@ public class MainScreenController {
         }
         // Reload current scene to apply language change
         switchScene("/org/example/fxml/MainScreen.fxml");
+    }
+
+    private void updateLanguageButtonIcon() {
+        Locale currentLocale = Locale.getDefault();
+        String imagePath;
+        if (currentLocale.getLanguage().equals("sk")) {
+            imagePath = "/org/example/flags/ukFlag.png";
+        } else {
+            imagePath = "/org/example/flags/skFlag.png";
+        }
+
+        try {
+            Image flagImage = new Image(getClass().getResourceAsStream(imagePath));
+            ImageView flagImageView = new ImageView(flagImage);
+            flagImageView.setFitWidth(40);
+            flagImageView.setFitHeight(40);
+            languageButton.setGraphic(flagImageView);
+            languageButton.setText(""); // Remove text to only show the icon
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback to text if image loading fails
+            languageButton.setText(currentLocale.getLanguage());
+        }
     }
 
     private void toggleTheme() {

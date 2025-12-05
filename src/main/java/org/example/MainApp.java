@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 
 public class MainApp extends Application {
     @Override
@@ -18,6 +19,7 @@ public class MainApp extends Application {
         stage.setScene(scene);
         stage.setFullScreenExitHint("");
         stage.setFullScreen(true);
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
         stage.show();
     }
 
