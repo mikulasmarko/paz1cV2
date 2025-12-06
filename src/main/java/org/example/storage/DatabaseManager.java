@@ -30,6 +30,23 @@ public class DatabaseManager {
         }
     }
 
+    public long getPersonId(String email) {
+        String query = "SELECT idPerson FROM person WHERE email = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("idPerson");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public boolean registerPerson(String name, String surname, String email, String phone,
             java.time.LocalDate dateOfBirth) {
         String query = "INSERT INTO person (name, surname, email, phone, dateOfBirth) VALUES (?, ?, ?, ?, ?)";

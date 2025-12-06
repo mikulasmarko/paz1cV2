@@ -15,6 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.example.QrCode.QrCodeGeneratorDemo;
+import org.example.eMail.emailSender;
+import org.example.storage.DatabaseManager;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -100,6 +103,22 @@ public class DocumentRegistrationController {
         if (documentSign.isSelected()) {
             org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
             if (dbManager.registerPerson(name, surname, email, phone, dateOfBirth)) {
+                // Get ID
+                long personId = dbManager.getPersonId(email);
+                if (personId != -1) {
+                    // Generate QR
+                    String qrPath = "src/main/resources/qrCodesGenerated/" + personId + ".png";
+                    QrCodeGeneratorDemo.generateQRCode(String.valueOf(personId), qrPath);
+
+                    // Send Email
+                    String body = "Dobrý deň " + name + " " + surname + ",\n\n" +
+                            "Vaša registrácia bola úspešná.\n" +
+                            "V prílohe nájdete Váš QR kód, ktorým sa budete preukazovať pri vstupe.\n\n" +
+                            "S pozdravom,\n" +
+                            "Tím Jump Arena";
+                    emailSender.sendEmail(email, "Registrácia Jump Arena", body, qrPath);
+                }
+
                 switchScene("/org/example/fxml/RegistrationSuccess.fxml");
             } else {
                 System.err.println("Database registration failed.");

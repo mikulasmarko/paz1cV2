@@ -47,6 +47,20 @@ public final class QrCodeGeneratorDemo {
         //doMaskDemo();
     }
 
+    public static void generateQRCode(String content, String filePath) {
+        try {
+            QrCode qr = QrCode.encodeText(content, QrCode.Ecc.MEDIUM);
+            File file = new File(filePath);
+            File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            writePng(toImage(qr, 13, 1), filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     /*---- Demo suite ----*/

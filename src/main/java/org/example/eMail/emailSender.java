@@ -16,28 +16,41 @@ public class emailSender {
 	private static final String appPassword = EMAIL_APP_PASS;
 
 	public static void main(String[] args) throws MessagingException, IOException {
-
-		Message message = new MimeMessage(getEmailSession());
-		message.setFrom(new InternetAddress(emailFrom));
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
-		message.setSubject("Registrácia");
-
-		BodyPart messageBodyPart = new MimeBodyPart();
-		messageBodyPart.setText("Registrácia úspešná");
-
-		MimeBodyPart attachmentPart = new MimeBodyPart();
-		attachmentPart.attachFile(new File("src/main/resources/qrCodesGenerated/540678.png"));
-
-		Multipart multipart = new MimeMultipart();
-		multipart.addBodyPart(messageBodyPart);
-		multipart.addBodyPart(attachmentPart);
-
-		message.setContent(multipart);
-
-		Transport.send(message);
-		System.out.println("email sent");
-
+        // Example usage
+        // sendEmail("5388467@upjs.sk", "Registrácia", "Registrácia úspešná", "src/main/resources/qrCodesGenerated/540678.png");
 	}
+
+    public static void sendEmail(String to, String subject, String body, String attachmentPath) {
+        try {
+            Message message = new MimeMessage(getEmailSession());
+            message.setFrom(new InternetAddress(emailFrom));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(body);
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            if (attachmentPath != null) {
+                MimeBodyPart attachmentPart = new MimeBodyPart();
+                try {
+                    attachmentPart.attachFile(new File(attachmentPath));
+                    multipart.addBodyPart(attachmentPart);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+            System.out.println("email sent");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
 
 	private static Session getEmailSession() {
 		return Session.getInstance(getEmailProperties(), new Authenticator() {
