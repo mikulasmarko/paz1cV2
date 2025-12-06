@@ -84,12 +84,12 @@ public class DatabaseManager {
                     try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
                         if (rsSeq.next()) {
                             int seq = rsSeq.getInt("seq");
-                            if (seq < 999) {
-                                stmt.execute("UPDATE sqlite_sequence SET seq = 999 WHERE name='person'");
+                            if (seq < 99999) {
+                                stmt.execute("UPDATE sqlite_sequence SET seq = 99999 WHERE name='person'");
                             }
                         } else {
                             // sqlite_sequence exists but no entry for person
-                            stmt.execute("INSERT INTO sqlite_sequence(name, seq) VALUES('person', 999);");
+                            stmt.execute("INSERT INTO sqlite_sequence(name, seq) VALUES('person', 99999);");
                         }
                     }
                 } catch (SQLException e) {
