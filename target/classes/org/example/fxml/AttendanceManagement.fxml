@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootPane" alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AttendanceManagementController">
+<VBox fx:id="rootPane" alignment="TOP_CENTER" spacing="20.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AttendanceManagementController">
    <children>
       <Label text="Správa dochádzky">
          <font>
