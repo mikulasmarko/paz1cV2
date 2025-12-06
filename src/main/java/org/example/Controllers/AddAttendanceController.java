@@ -22,6 +22,9 @@ public class AddAttendanceController {
     private ComboBox<Person> personComboBox;
 
     @FXML
+    private TextField searchField;
+
+    @FXML
     private DatePicker datePicker;
 
     @FXML
@@ -40,6 +43,7 @@ public class AddAttendanceController {
     private Button backButton;
 
     private final DatabaseManager dbManager = new DatabaseManager();
+    private List<Person> allEmployees;
 
     @FXML
     void initialize() {
@@ -48,11 +52,11 @@ public class AddAttendanceController {
         // Load persons
         List<Person> persons = dbManager.searchPersons(""); // Get all
         // Filter only persons with positions (employees)
-        List<Person> employees = persons.stream()
+        allEmployees = persons.stream()
                 .filter(p -> p.getPosition() != null && !p.getPosition().isEmpty())
                 .toList();
 
-        personComboBox.setItems(FXCollections.observableArrayList(employees));
+        personComboBox.setItems(FXCollections.observableArrayList(allEmployees));
         personComboBox.setConverter(new StringConverter<Person>() {
             @Override
             public String toString(Person object) {
@@ -64,6 +68,9 @@ public class AddAttendanceController {
                 return null; // Not needed
             }
         });
+
+        // Search listener
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterEmployees(newValue));
 
         datePicker.setValue(LocalDate.now());
 
@@ -104,6 +111,20 @@ public class AddAttendanceController {
             stage.setFullScreen(true);
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void filterEmployees(String query) {
+        if (query == null || query.isEmpty()) {
+            personComboBox.setItems(FXCollections.observableArrayList(allEmployees));
+        } else {
+            String lowerQuery = query.toLowerCase();
+            List<Person> filtered = allEmployees.stream()
+                    .filter(p -> (p.getName() + " " + p.getSurname()).toLowerCase().contains(lowerQuery))
+                    .toList();
+            personComboBox.setItems(FXCollections.observableArrayList(filtered));
+            personComboBox.getSelectionModel().selectFirst();
+            personComboBox.show();
         }
     }
 }

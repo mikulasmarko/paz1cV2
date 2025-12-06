@@ -20,6 +20,7 @@
       <VBox spacing="5.0">
          <children>
             <Label text="Zamestnanec:" />
+            <TextField fx:id="searchField" promptText="Vyhľadať zamestnanca..." prefWidth="300.0" />
             <ComboBox fx:id="personComboBox" prefWidth="300.0" />
          </children>
       </VBox>

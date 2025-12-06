@@ -53,6 +53,9 @@ public class CustomerVisitsController {
     private Button backButton;
 
     @FXML
+    private Button refreshButton;
+
+    @FXML
     private Button addVisitButton;
 
     private DatabaseManager dbManager;
@@ -104,9 +107,11 @@ public class CustomerVisitsController {
         // Buttons
         backButton.setOnAction(event -> switchScene("/org/example/fxml/Settings.fxml"));
         addVisitButton.setOnAction(event -> switchScene("/org/example/fxml/AddCustomerVisit.fxml"));
+        refreshButton.setOnAction(event -> loadVisits(datePicker.getValue()));
 
         // Theme
-        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel), Arrays.asList(backButton, addVisitButton), null);
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel),
+                Arrays.asList(backButton, addVisitButton, refreshButton), null);
 
         // Load initial data
         loadVisits(datePicker.getValue());
