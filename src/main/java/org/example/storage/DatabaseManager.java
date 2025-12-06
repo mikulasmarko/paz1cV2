@@ -378,6 +378,53 @@ public class DatabaseManager {
         }
     }
 
+    public java.util.List<org.example.model.Person> searchPersons(String queryStr) {
+        java.util.List<org.example.model.Person> persons = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM person WHERE name LIKE ? OR surname LIKE ? OR email LIKE ?";
+
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            String searchPattern = "%" + queryStr + "%";
+            pstmt.setString(1, searchPattern);
+            pstmt.setString(2, searchPattern);
+            pstmt.setString(3, searchPattern);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    org.example.model.Person person = new org.example.model.Person(
+                            rs.getLong("idPerson"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getString("email"),
+                            rs.getString("phone"),
+                            rs.getString("dateOfBirth"));
+                    persons.add(person);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return persons;
+    }
+
+    public boolean updatePerson(org.example.model.Person person) {
+        String sql = "UPDATE person SET name = ?, surname = ?, email = ?, phone = ?, dateOfBirth = ? WHERE idPerson = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, person.getName());
+            pstmt.setString(2, person.getSurname());
+            pstmt.setString(3, person.getEmail());
+            pstmt.setString(4, person.getPhone());
+            pstmt.setString(5, person.getDateOfBirth());
+            pstmt.setLong(6, person.getId());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         new DatabaseManager().initialize();
     }

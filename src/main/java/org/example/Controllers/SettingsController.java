@@ -23,16 +23,21 @@ public class SettingsController {
     private Button changePasswordButton;
 
     @FXML
+    private Button editCustomerButton;
+
+    @FXML
     private Button backButton;
 
     @FXML
     void initialize() {
         // Apply theme
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(addDocumentButton, changePasswordButton, backButton),
+        ThemeManager.applyTheme(rootPane, null,
+                Arrays.asList(addDocumentButton, changePasswordButton, editCustomerButton, backButton),
                 null);
 
         addDocumentButton.setOnAction(event -> switchScene("/org/example/fxml/AddDocument.fxml"));
         changePasswordButton.setOnAction(event -> switchScene("/org/example/fxml/ChangePassword.fxml"));
+        editCustomerButton.setOnAction(event -> switchScene("/org/example/fxml/CustomerSearch.fxml"));
         backButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
     }
 
