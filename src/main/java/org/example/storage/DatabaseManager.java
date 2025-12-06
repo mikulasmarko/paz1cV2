@@ -517,14 +517,48 @@ public class DatabaseManager {
         return null;
     }
 
-    public boolean insertDocument(String name, String path, String language, String validFrom) {
-        String query = "INSERT INTO document (nameDoc, pathDoc, language, validityFrom) VALUES (?, ?, ?, ?)";
+    public boolean insertDocument(String name, String path, String language, String validFrom, String validTo) {
+        String query = "INSERT INTO document (nameDoc, pathDoc, language, validityFrom, validityTo) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, name);
             pstmt.setString(2, path);
             pstmt.setString(3, language);
             pstmt.setString(4, validFrom);
+            pstmt.setString(5, validTo); // Can be null
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public java.util.List<org.example.model.Document> getAllDocuments() {
+        java.util.List<org.example.model.Document> documents = new java.util.ArrayList<>();
+        String query = "SELECT * FROM document ORDER BY idDocument DESC";
+        try (Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                documents.add(new org.example.model.Document(
+                        rs.getLong("idDocument"),
+                        rs.getString("nameDoc"),
+                        rs.getString("pathDoc"),
+                        rs.getString("language"),
+                        rs.getString("validityFrom"),
+                        rs.getString("validityTo")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return documents;
+    }
+
+    public boolean deleteDocument(long id) {
+        String query = "DELETE FROM document WHERE idDocument = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, id);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -630,7 +664,7 @@ public class DatabaseManager {
                 "JOIN personHasPossition php ON p.idPerson = php.idPerson " +
                 "WHERE strftime('%m', a.atendanceDay) = ? AND strftime('%Y', a.atendanceDay) = ? " +
                 "AND php.positionTo IS NULL " +
-                "ORDER BY a.atendanceDay DESC, p.surname ASC";
+                "ORDER BY a.atendanceDay DESC, a.attendanceStart DESC, p.surname ASC";
 
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -638,6 +672,46 @@ public class DatabaseManager {
             pstmt.setString(1, String.format("%02d", month));
             pstmt.setString(2, String.valueOf(year));
 
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String start = rs.getString("attendanceStart");
+                    String end = rs.getString("attendanceEnd");
+
+                    if (start != null && start.length() > 5 && start.chars().filter(ch -> ch == ':').count() == 2) {
+                        start = start.substring(0, start.lastIndexOf(':'));
+                    }
+                    if (end != null && end.length() > 5 && end.chars().filter(ch -> ch == ':').count() == 2) {
+                        end = end.substring(0, end.lastIndexOf(':'));
+                    }
+
+                    records.add(new org.example.model.AttendanceRecord(
+                            rs.getLong("idAtendance"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getString("atendanceDay"),
+                            start,
+                            end));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public java.util.List<org.example.model.AttendanceRecord> getVisitsByDate(String date) {
+        java.util.List<org.example.model.AttendanceRecord> records = new java.util.ArrayList<>();
+        String sql = "SELECT a.idAtendance, p.name, p.surname, a.atendanceDay, a.attendanceStart, a.attendanceEnd " +
+                "FROM attendance a " +
+                "JOIN person p ON a.idPerson = p.idPerson " +
+                "WHERE a.atendanceDay = ? " +
+                "AND NOT EXISTS (SELECT 1 FROM personHasPossition php WHERE php.idPerson = p.idPerson AND php.positionTo IS NULL) "
+                +
+                "ORDER BY a.attendanceStart DESC";
+
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, date);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     String start = rs.getString("attendanceStart");

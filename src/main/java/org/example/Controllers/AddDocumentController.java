@@ -80,9 +80,10 @@ public class AddDocumentController {
         }
 
         String validFrom = validFromPicker.getValue().toString();
+        String validTo = validToPicker.getValue() != null ? validToPicker.getValue().toString() : null;
 
         DatabaseManager db = new DatabaseManager();
-        if (db.insertDocument(name, filePath, language, validFrom)) {
+        if (db.insertDocument(name, filePath, language, validFrom, validTo)) {
             // Success - maybe show confirmation or just redirect?
             // Since requirements moved away from popups, let's just redirect.
             System.out.println("Document saved successfully");

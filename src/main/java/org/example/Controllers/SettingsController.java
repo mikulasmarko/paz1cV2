@@ -20,6 +20,12 @@ public class SettingsController {
     private Button addDocumentButton;
 
     @FXML
+    private Button manageDocumentsButton;
+
+    @FXML
+    private Button customerVisitsButton;
+
+    @FXML
     private Button changePasswordButton;
 
     @FXML
@@ -41,7 +47,9 @@ public class SettingsController {
     void initialize() {
         // Apply theme
         ThemeManager.applyTheme(rootPane, null,
-                Arrays.asList(addDocumentButton, changePasswordButton, editCustomerButton, managePositionsButton,
+                Arrays.asList(addDocumentButton, manageDocumentsButton, customerVisitsButton, changePasswordButton,
+                        editCustomerButton,
+                        managePositionsButton,
                         attendanceManagementButton, backButton, exitButton),
                 null);
 
@@ -49,6 +57,8 @@ public class SettingsController {
         exitButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
 
         addDocumentButton.setOnAction(event -> switchScene("/org/example/fxml/AddDocument.fxml"));
+        manageDocumentsButton.setOnAction(event -> switchScene("/org/example/fxml/ManageDocuments.fxml"));
+        customerVisitsButton.setOnAction(event -> switchScene("/org/example/fxml/CustomerVisits.fxml"));
         changePasswordButton.setOnAction(event -> switchScene("/org/example/fxml/ChangePassword.fxml"));
         editCustomerButton.setOnAction(event -> switchScene("/org/example/fxml/CustomerSearch.fxml"));
         managePositionsButton.setOnAction(event -> switchScene("/org/example/fxml/ManagePositions.fxml"));

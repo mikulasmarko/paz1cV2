@@ -14,6 +14,8 @@
          </font>
       </Label>
       <Button fx:id="addDocumentButton" mnemonicParsing="false" text="Pridať dokument" />
+      <Button fx:id="manageDocumentsButton" mnemonicParsing="false" text="%button.manage_documents" />
+      <Button fx:id="customerVisitsButton" mnemonicParsing="false" text="%button.customer_visits" />
       <Button fx:id="changePasswordButton" mnemonicParsing="false" text="Zmeniť heslo" />
       <Button fx:id="editCustomerButton" mnemonicParsing="false" text="Upraviť zákazníka" />
       <Button fx:id="managePositionsButton" mnemonicParsing="false" text="Spravovať pozície" />

@@ -83,17 +83,29 @@ public class AttendanceManagementController {
         startColumn.setCellValueFactory(cellData -> cellData.getValue().startProperty());
         startColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         startColumn.setOnEditCommit(event -> {
-            AttendanceRecord record = event.getRowValue();
-            record.setStart(event.getNewValue());
-            updateRecord(record);
+            String newTime = event.getNewValue();
+            if (isValidTime(newTime)) {
+                AttendanceRecord record = event.getRowValue();
+                record.setStart(newTime);
+                updateRecord(record);
+            } else {
+                showInvalidTimeAlert();
+                attendanceTable.refresh();
+            }
         });
 
         endColumn.setCellValueFactory(cellData -> cellData.getValue().endProperty());
         endColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         endColumn.setOnEditCommit(event -> {
-            AttendanceRecord record = event.getRowValue();
-            record.setEnd(event.getNewValue());
-            updateRecord(record);
+            String newTime = event.getNewValue();
+            if (isValidTime(newTime)) {
+                AttendanceRecord record = event.getRowValue();
+                record.setEnd(newTime);
+                updateRecord(record);
+            } else {
+                showInvalidTimeAlert();
+                attendanceTable.refresh();
+            }
         });
 
         refreshButton.setOnAction(event -> loadData());
@@ -103,6 +115,18 @@ public class AttendanceManagementController {
         backButton.setOnAction(event -> switchScene("/org/example/fxml/Settings.fxml"));
 
         loadData();
+    }
+
+    private boolean isValidTime(String time) {
+        if (time == null || time.isEmpty())
+            return true; // Empty is allowed for End
+        // Matches HH:mm or HH:mm:ss
+        return time.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$");
+    }
+
+    private void showInvalidTimeAlert() {
+        new Alert(Alert.AlertType.ERROR, "Nesprávny formát času. Zadajte čas vo formáte HH:mm.", ButtonType.OK)
+                .showAndWait();
     }
 
     private void openAddDialog() {
@@ -141,6 +165,7 @@ public class AttendanceManagementController {
         if (dbManager.updateAttendance(record.getIdAttendance(), record.getStart(), record.getEnd())) {
             statusLabel.setText("Záznam aktualizovaný.");
             statusLabel.setStyle("-fx-text-fill: green;");
+            loadData(); // Sort
         } else {
             statusLabel.setText("Chyba pri aktualizácii.");
             statusLabel.setStyle("-fx-text-fill: red;");
