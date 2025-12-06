@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="rootPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.MainScreenController">
+<VBox fx:id="rootPane" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.MainScreenController">
    <children>
       <HBox alignment="TOP_RIGHT" fillHeight="false" maxHeight="50.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
@@ -62,7 +62,7 @@
          <children>
             <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="settingsButton" mnemonicParsing="false" prefWidth="80.0" text="%button.settings">
+                  <Button fx:id="settingsButton" mnemonicParsing="false" prefHeight="24.0" prefWidth="41.0" text="%button.settings">
                      <HBox.margin>
                         <Insets bottom="20.0" left="20.0" />
                      </HBox.margin>

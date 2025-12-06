@@ -51,6 +51,20 @@ public class MainScreenController {
         themeButton.setOnAction(event -> toggleTheme());
         applyTheme();
         updateLanguageButtonIcon();
+        updateSettingsButtonIcon();
+    }
+
+    private void updateSettingsButtonIcon() {
+        try {
+            Image settingsImage = new Image(getClass().getResourceAsStream("/org/example/flags/kolieskoSettings.png"));
+            ImageView settingsImageView = new ImageView(settingsImage);
+            settingsImageView.setFitWidth(40);
+            settingsImageView.setFitHeight(40);
+            settingsButton.setGraphic(settingsImageView);
+            settingsButton.setText(""); // Remove text
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void switchScene(String fxmlPath) {
