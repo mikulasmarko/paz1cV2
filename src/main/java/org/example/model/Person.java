@@ -10,14 +10,17 @@ public class Person {
     private final SimpleStringProperty email;
     private final SimpleStringProperty phone;
     private final SimpleStringProperty dateOfBirth; // Stored as String in DB for now based on previous code
+    private final SimpleStringProperty position;
 
-    public Person(long id, String name, String surname, String email, String phone, String dateOfBirth) {
+    public Person(long id, String name, String surname, String email, String phone, String dateOfBirth,
+            String position) {
         this.id = new SimpleLongProperty(id);
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
         this.email = new SimpleStringProperty(email);
         this.phone = new SimpleStringProperty(phone);
         this.dateOfBirth = new SimpleStringProperty(dateOfBirth);
+        this.position = new SimpleStringProperty(position);
     }
 
     public long getId() {
@@ -90,5 +93,17 @@ public class Person {
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth.set(dateOfBirth);
+    }
+
+    public String getPosition() {
+        return position.get();
+    }
+
+    public SimpleStringProperty positionProperty() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position.set(position);
     }
 }

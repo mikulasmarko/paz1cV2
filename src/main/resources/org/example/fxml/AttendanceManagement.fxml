@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="rootPane" alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AttendanceManagementController">
+   <children>
+      <Label text="Správa dochádzky">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Label text="Vyberte mesiac (akýkoľvek deň v mesiaci):" />
+            <DatePicker fx:id="monthPicker" />
+            <Button fx:id="refreshButton" mnemonicParsing="false" text="Načítať" />
+         </children>
+      </HBox>
+      <TableView fx:id="attendanceTable" editable="true" prefHeight="400.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Meno" />
+          <TableColumn fx:id="surnameColumn" prefWidth="150.0" text="Priezvisko" />
+            <TableColumn fx:id="dayColumn" prefWidth="100.0" text="Deň" />
+            <TableColumn fx:id="startColumn" prefWidth="100.0" text="Príchod" />
+            <TableColumn fx:id="endColumn" prefWidth="100.0" text="Odchod" />
+        </columns>
+      </TableView>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Button fx:id="generatePdfButton" mnemonicParsing="false" text="Generovať PDF Report" />
+            <Button fx:id="addRecordButton" mnemonicParsing="false" text="Pridať záznam" />
+            <Button fx:id="deleteRecordButton" mnemonicParsing="false" text="Vymazať záznam" />
+            <Button fx:id="backButton" mnemonicParsing="false" text="Späť" />
+         </children>
+      </HBox>
+      <Label fx:id="statusLabel" />
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

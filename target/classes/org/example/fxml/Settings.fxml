@@ -16,6 +16,9 @@
       <Button fx:id="addDocumentButton" mnemonicParsing="false" text="Pridať dokument" />
       <Button fx:id="changePasswordButton" mnemonicParsing="false" text="Zmeniť heslo" />
       <Button fx:id="editCustomerButton" mnemonicParsing="false" text="Upraviť zákazníka" />
+      <Button fx:id="managePositionsButton" mnemonicParsing="false" text="Spravovať pozície" />
+      <Button fx:id="attendanceManagementButton" mnemonicParsing="false" text="Spravovať dochádzku" />
+      <Button fx:id="exitButton" mnemonicParsing="false" style="-fx-background-color: red; -fx-text-fill: white;" text="%button.exit" />
       <Button fx:id="backButton" mnemonicParsing="false" text="Späť" />
    </children>
    <padding>

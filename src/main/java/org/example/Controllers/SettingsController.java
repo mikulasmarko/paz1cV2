@@ -26,18 +26,34 @@ public class SettingsController {
     private Button editCustomerButton;
 
     @FXML
+    private Button managePositionsButton;
+
+    @FXML
+    private Button attendanceManagementButton;
+
+    @FXML
+    private Button exitButton;
+
+    @FXML
     private Button backButton;
 
     @FXML
     void initialize() {
         // Apply theme
         ThemeManager.applyTheme(rootPane, null,
-                Arrays.asList(addDocumentButton, changePasswordButton, editCustomerButton, backButton),
+                Arrays.asList(addDocumentButton, changePasswordButton, editCustomerButton, managePositionsButton,
+                        attendanceManagementButton, backButton, exitButton),
                 null);
+
+        // Override style for exit button to be red
+        exitButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
 
         addDocumentButton.setOnAction(event -> switchScene("/org/example/fxml/AddDocument.fxml"));
         changePasswordButton.setOnAction(event -> switchScene("/org/example/fxml/ChangePassword.fxml"));
         editCustomerButton.setOnAction(event -> switchScene("/org/example/fxml/CustomerSearch.fxml"));
+        managePositionsButton.setOnAction(event -> switchScene("/org/example/fxml/ManagePositions.fxml"));
+        attendanceManagementButton.setOnAction(event -> switchScene("/org/example/fxml/AttendanceManagement.fxml"));
+        exitButton.setOnAction(event -> System.exit(0));
         backButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
     }
 

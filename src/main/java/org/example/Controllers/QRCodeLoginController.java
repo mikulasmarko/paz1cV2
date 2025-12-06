@@ -56,14 +56,20 @@ public class QRCodeLoginController {
             try {
                 long personId = Long.parseLong(input.trim());
                 org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
-                boolean success = dbManager.recordAttendance(personId);
+                boolean exists = dbManager.personExists(personId);
 
-                if (success) {
-                    System.out.println("Attendance recorded for ID: " + personId);
+                if (exists) {
+                    System.out.println("User validated: " + personId);
                     inputNumber.clear();
-                    switchScene("/org/example/fxml/DocumentLogin.fxml");
+
+                    java.util.List<String> positions = dbManager.getPersonPositions(personId);
+                    if (positions != null && !positions.isEmpty()) {
+                        switchScene("/org/example/fxml/attendance.fxml", personId);
+                    } else {
+                        switchScene("/org/example/fxml/DocumentLogin.fxml");
+                    }
                 } else {
-                    System.out.println("Failed to record attendance (ID not found or DB error).");
+                    System.out.println("Person with ID " + personId + " not found.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid ID format: " + input);
@@ -72,10 +78,20 @@ public class QRCodeLoginController {
     }
 
     private void switchScene(String fxmlPath) {
+        switchScene(fxmlPath, -1);
+    }
+
+    private void switchScene(String fxmlPath, long personId) {
         try {
             ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath), bundle);
             Parent root = loader.load();
+
+            if (personId != -1 && fxmlPath.contains("attendance")) {
+                AttendanceController controller = loader.getController();
+                controller.setPersonId(personId);
+            }
+
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setFullScreen(true);

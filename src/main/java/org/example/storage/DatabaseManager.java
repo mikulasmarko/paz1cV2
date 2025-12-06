@@ -47,6 +47,167 @@ public class DatabaseManager {
         return -1;
     }
 
+    public boolean personExists(long personId) {
+        String query = "SELECT 1 FROM person WHERE idPerson = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, personId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public java.util.List<String> getPersonPositions(long personId) {
+        java.util.List<String> positions = new java.util.ArrayList<>();
+        String query = "SELECT pos.positionName " +
+                "FROM personHasPossition php " +
+                "JOIN position pos ON php.idPosition = pos.idPosition " +
+                "WHERE php.idPerson = ? AND php.positionTo IS NULL";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setLong(1, personId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    positions.add(rs.getString("positionName"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return positions;
+    }
+
+    public boolean addPersonPosition(long personId, String positionName) {
+        if (positionName == null || positionName.trim().isEmpty())
+            return false;
+
+        try (Connection conn = getConnection()) {
+            // 1. Get Position ID
+            int positionId = -1;
+            String findPosSql = "SELECT idPosition FROM position WHERE positionName = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(findPosSql)) {
+                pstmt.setString(1, positionName);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        positionId = rs.getInt("idPosition");
+                    }
+                }
+            }
+            if (positionId == -1)
+                return false; // Position must exist in predefined list
+
+            // 2. Check if already assigned active
+            String checkSql = "SELECT 1 FROM personHasPossition WHERE idPerson = ? AND idPosition = ? AND positionTo IS NULL";
+            try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+                pstmt.setLong(1, personId);
+                pstmt.setInt(2, positionId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next())
+                        return true; // Already exists, consider success
+                }
+            }
+
+            // 3. Insert new mapping
+            String insertSql = "INSERT INTO personHasPossition (idPerson, idPosition, positionFrom) VALUES (?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                pstmt.setLong(1, personId);
+                pstmt.setInt(2, positionId);
+                pstmt.setString(3, java.time.LocalDate.now().toString());
+                return pstmt.executeUpdate() > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean removePersonPosition(long personId, String positionName) {
+        try (Connection conn = getConnection()) {
+            // Get Position ID
+            int positionId = -1;
+            String findPosSql = "SELECT idPosition FROM position WHERE positionName = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(findPosSql)) {
+                pstmt.setString(1, positionName);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        positionId = rs.getInt("idPosition");
+                    }
+                }
+            }
+            if (positionId == -1)
+                return false;
+
+            // Update positionTo = now
+            String updateSql = "UPDATE personHasPossition SET positionTo = ? WHERE idPerson = ? AND idPosition = ? AND positionTo IS NULL";
+            try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+                pstmt.setString(1, java.time.LocalDate.now().toString());
+                pstmt.setLong(2, personId);
+                pstmt.setInt(3, positionId);
+                return pstmt.executeUpdate() > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public java.util.List<String> getAllPositions() {
+        java.util.List<String> positions = new java.util.ArrayList<>();
+        String query = "SELECT positionName FROM position ORDER BY positionName";
+        try (Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                positions.add(rs.getString("positionName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return positions;
+    }
+
+    public boolean addPosition(String positionName) {
+        if (positionName == null || positionName.trim().isEmpty())
+            return false;
+        String query = "INSERT INTO position (positionName) VALUES (?)";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, positionName.trim());
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deletePosition(String positionName) {
+        // First check if any person has this position currently assigned?
+        // Actually, let's just try to delete. If strict FKs are on, it might fail if
+        // used.
+        // But `personHasPossition` references `idPosition`.
+        // We accept that we need to find ID first or delete by name.
+
+        // Let's get ID first to be safe or delete by name where name matches.
+        // "DELETE FROM position WHERE positionName = ?"
+
+        String query = "DELETE FROM position WHERE positionName = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, positionName);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            // Likely FK violation if used
+            System.err.println("Error deleting position: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean registerPerson(String name, String surname, String email, String phone,
             java.time.LocalDate dateOfBirth) {
         String query = "INSERT INTO person (name, surname, email, phone, dateOfBirth) VALUES (?, ?, ?, ?, ?)";
@@ -320,6 +481,25 @@ public class DatabaseManager {
         }
     }
 
+    public boolean recordDeparture(long personId) {
+        // Find the latest open attendance record for today
+        String updateSql = "UPDATE attendance SET attendanceEnd = ? WHERE idAtendance = (SELECT idAtendance FROM attendance WHERE idPerson = ? AND atendanceDay = ? AND attendanceEnd IS NULL ORDER BY idAtendance DESC LIMIT 1)";
+
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            pstmt.setString(1, now.toLocalTime().toString());
+            pstmt.setLong(2, personId);
+            pstmt.setString(3, now.toLocalDate().toString());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public String getDocumentPath(String language) {
         String query = "SELECT pathDoc FROM document WHERE language = ? ORDER BY idDocument DESC LIMIT 1";
         try (Connection conn = getConnection();
@@ -380,7 +560,12 @@ public class DatabaseManager {
 
     public java.util.List<org.example.model.Person> searchPersons(String queryStr) {
         java.util.List<org.example.model.Person> persons = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM person WHERE name LIKE ? OR surname LIKE ? OR email LIKE ?";
+        String sql = "SELECT p.*, GROUP_CONCAT(pos.positionName, ', ') as positionNames " +
+                "FROM person p " +
+                "LEFT JOIN personHasPossition php ON p.idPerson = php.idPerson AND php.positionTo IS NULL " +
+                "LEFT JOIN position pos ON php.idPosition = pos.idPosition " +
+                "WHERE p.name LIKE ? OR p.surname LIKE ? OR p.email LIKE ? " +
+                "GROUP BY p.idPerson";
 
         try (Connection conn = getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -397,7 +582,8 @@ public class DatabaseManager {
                             rs.getString("surname"),
                             rs.getString("email"),
                             rs.getString("phone"),
-                            rs.getString("dateOfBirth"));
+                            rs.getString("dateOfBirth"),
+                            rs.getString("positionNames"));
                     persons.add(person);
                 }
             }
@@ -417,6 +603,103 @@ public class DatabaseManager {
             pstmt.setString(4, person.getPhone());
             pstmt.setString(5, person.getDateOfBirth());
             pstmt.setLong(6, person.getId());
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                // updatePersonPosition(person.getId(), person.getPosition()); // REMOVED:
+                // Managed separately now
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public java.util.List<org.example.model.AttendanceRecord> getAttendance(int month, int year) {
+        java.util.List<org.example.model.AttendanceRecord> records = new java.util.ArrayList<>();
+        // Note: SQLite strftime('%m', atendanceDay) returns e.g. '01', '12'.
+        // We need to format specific query. Or just select all and filter manually if
+        // simple.
+        // Let's use SQL filtering.
+        String sql = "SELECT DISTINCT a.idAtendance, p.name, p.surname, a.atendanceDay, a.attendanceStart, a.attendanceEnd "
+                +
+                "FROM attendance a " +
+                "JOIN person p ON a.idPerson = p.idPerson " +
+                "JOIN personHasPossition php ON p.idPerson = php.idPerson " +
+                "WHERE strftime('%m', a.atendanceDay) = ? AND strftime('%Y', a.atendanceDay) = ? " +
+                "AND php.positionTo IS NULL " +
+                "ORDER BY a.atendanceDay DESC, p.surname ASC";
+
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, String.format("%02d", month));
+            pstmt.setString(2, String.valueOf(year));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String start = rs.getString("attendanceStart");
+                    String end = rs.getString("attendanceEnd");
+
+                    if (start != null && start.length() > 5 && start.chars().filter(ch -> ch == ':').count() == 2) {
+                        start = start.substring(0, start.lastIndexOf(':'));
+                    }
+                    if (end != null && end.length() > 5 && end.chars().filter(ch -> ch == ':').count() == 2) {
+                        end = end.substring(0, end.lastIndexOf(':'));
+                    }
+
+                    records.add(new org.example.model.AttendanceRecord(
+                            rs.getLong("idAtendance"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getString("atendanceDay"),
+                            start,
+                            end));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public boolean updateAttendance(long idAttendance, String start, String end) {
+        String sql = "UPDATE attendance SET attendanceStart = ?, attendanceEnd = ? WHERE idAtendance = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, start);
+            pstmt.setString(2, end);
+            pstmt.setLong(3, idAttendance);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAttendance(long idAttendance) {
+        String sql = "DELETE FROM attendance WHERE idAtendance = ?";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, idAttendance);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addAttendanceRecord(long personId, String date, String start, String end) {
+        String sql = "INSERT INTO attendance (idPerson, atendanceDay, attendanceStart, attendanceEnd) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, personId);
+            pstmt.setString(2, date);
+            pstmt.setString(3, start);
+            pstmt.setString(4, end);
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {

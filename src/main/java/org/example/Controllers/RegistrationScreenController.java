@@ -39,7 +39,13 @@ public class RegistrationScreenController {
     private javafx.scene.control.TextField phoneField;
 
     @FXML
-    private javafx.scene.control.DatePicker birthDateField;
+    private javafx.scene.control.ComboBox<Integer> dayBox;
+
+    @FXML
+    private javafx.scene.control.ComboBox<Integer> monthBox;
+
+    @FXML
+    private javafx.scene.control.ComboBox<Integer> yearBox;
 
     @FXML
     private javafx.scene.control.Label errorLabel;
@@ -52,6 +58,33 @@ public class RegistrationScreenController {
                 switchSceneWithData("/org/example/fxml/DocumentRegistration.fxml");
             }
         });
+
+        // Populate Date Pickers
+        javafx.collections.ObservableList<Integer> days = javafx.collections.FXCollections.observableArrayList();
+        for (int i = 1; i <= 31; i++)
+            days.add(i);
+        dayBox.setItems(days);
+
+        javafx.collections.ObservableList<Integer> months = javafx.collections.FXCollections.observableArrayList();
+        for (int i = 1; i <= 12; i++)
+            months.add(i);
+        monthBox.setItems(months);
+
+        javafx.collections.ObservableList<Integer> years = javafx.collections.FXCollections.observableArrayList();
+        int currentYear = java.time.LocalDate.now().getYear();
+        for (int i = currentYear; i >= 1900; i--)
+            years.add(i);
+        yearBox.setItems(years);
+
+        // Set localized prompts
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", java.util.Locale.getDefault());
+        if (bundle.containsKey("prompt.day"))
+            dayBox.setPromptText(bundle.getString("prompt.day"));
+        if (bundle.containsKey("prompt.month"))
+            monthBox.setPromptText(bundle.getString("prompt.month"));
+        if (bundle.containsKey("prompt.year"))
+            yearBox.setPromptText(bundle.getString("prompt.year"));
+
         java.util.List<Label> labels = java.util.Arrays.asList(registrationLabel);
         java.util.List<Button> buttons = java.util.Arrays.asList(cancelButton, nextButton);
         ThemeManager.applyTheme(rootPane, labels, buttons, null);
@@ -62,7 +95,9 @@ public class RegistrationScreenController {
                 lastNameField.getText().isEmpty() ||
                 emailField.getText().isEmpty() ||
                 phoneField.getText().isEmpty() ||
-                birthDateField.getValue() == null) {
+                dayBox.getValue() == null ||
+                monthBox.getValue() == null ||
+                yearBox.getValue() == null) {
 
             showError("error.all_fields_required");
             return false;
@@ -80,6 +115,17 @@ public class RegistrationScreenController {
 
         if (new org.example.storage.DatabaseManager().isEmailExists(emailField.getText())) {
             showError("error.email_exists");
+            return false;
+        }
+
+        try {
+            int d = dayBox.getValue();
+            int m = monthBox.getValue();
+            int y = yearBox.getValue();
+            java.time.LocalDate.of(y, m, d); // Validate date
+        } catch (java.time.DateTimeException e) {
+            errorLabel.setText("Neplatný dátum.");
+            errorLabel.setVisible(true);
             return false;
         }
 
@@ -112,6 +158,11 @@ public class RegistrationScreenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath), bundle);
             Parent root = loader.load();
 
+            int d = dayBox.getValue();
+            int m = monthBox.getValue();
+            int y = yearBox.getValue();
+            java.time.LocalDate birthDate = java.time.LocalDate.of(y, m, d);
+
             // Pass data to DocumentRegistrationController
             DocumentRegistrationController controller = loader.getController();
             controller.setPersonData(
@@ -119,7 +170,7 @@ public class RegistrationScreenController {
                     lastNameField.getText(),
                     emailField.getText(),
                     phoneField.getText(),
-                    birthDateField.getValue());
+                    birthDate);
 
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.getScene().setRoot(root);

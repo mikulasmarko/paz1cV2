@@ -47,6 +47,21 @@
             <TextField fx:id="dobField" />
          </children>
       </VBox>
+      <VBox maxWidth="300.0" spacing="5.0">
+         <children>
+            <Label text="Pracovné pozície:" />
+             <!-- Add new position -->
+            <HBox spacing="10.0">
+               <children>
+                  <javafx.scene.control.ComboBox fx:id="availablePositionsCombo" promptText="Vyber pozíciu" />
+                  <Button fx:id="addPositionButton" mnemonicParsing="false" text="Pridať" />
+               </children>
+            </HBox>
+             <!-- Current positions list -->
+             <javafx.scene.control.ListView fx:id="currentPositionsListView" prefHeight="100.0" />
+             <Button fx:id="removePositionButton" mnemonicParsing="false" text="Odobrať označenú" />
+         </children>
+      </VBox>
 
       <HBox alignment="CENTER" spacing="20.0">
          <children>
