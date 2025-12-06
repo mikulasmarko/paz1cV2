@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DatabaseManager",
+            "request": "launch",
+            "mainClass": "org.example.storage.DatabaseManager",
+            "projectName": "paz1cProject2025"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

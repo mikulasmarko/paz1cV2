@@ -49,18 +49,7 @@ public class RegistrationScreenController {
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
         nextButton.setOnAction(event -> {
             if (validateFields()) {
-                org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
-                if (dbManager.registerPerson(
-                        firstNameField.getText(),
-                        lastNameField.getText(),
-                        emailField.getText(),
-                        phoneField.getText(),
-                        birthDateField.getValue())) {
-                    switchScene("/org/example/fxml/DocumentRegistration.fxml");
-                } else {
-                    showError("error.registration_failed"); // You might need to add this key or reuse an existing one,
-                                                            // or just show generic error
-                }
+                switchSceneWithData("/org/example/fxml/DocumentRegistration.fxml");
             }
         });
         java.util.List<Label> labels = java.util.Arrays.asList(registrationLabel);
@@ -109,6 +98,29 @@ public class RegistrationScreenController {
             ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath), bundle);
             Parent root = loader.load();
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.setFullScreen(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void switchSceneWithData(String fxmlPath) {
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath), bundle);
+            Parent root = loader.load();
+
+            // Pass data to DocumentRegistrationController
+            DocumentRegistrationController controller = loader.getController();
+            controller.setPersonData(
+                    firstNameField.getText(),
+                    lastNameField.getText(),
+                    emailField.getText(),
+                    phoneField.getText(),
+                    birthDateField.getValue());
+
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.getScene().setRoot(root);
             stage.setFullScreen(true);

@@ -39,9 +39,24 @@ public class DocumentRegistrationController {
     @FXML
     private VBox rootPane;
 
+    private String name;
+    private String surname;
+    private String email;
+    private String phone;
+    private java.time.LocalDate dateOfBirth;
+
+    public void setPersonData(String name, String surname, String email, String phone,
+            java.time.LocalDate dateOfBirth) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     @FXML
     void initialize() {
-        registerButton.setOnAction(event -> switchScene("/org/example/fxml/RegistrationSuccess.fxml"));
+        registerButton.setOnAction(event -> handleRegistration());
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/RegistrationPage.fxml"));
         java.util.List<Button> buttons = java.util.Arrays.asList(cancelButton, registerButton);
         java.util.List<CheckBox> checkBoxes = java.util.Arrays.asList(documentSign);
@@ -49,7 +64,8 @@ public class DocumentRegistrationController {
 
         try {
             // Load PDF document
-            InputStream inputStream = getClass().getResourceAsStream("/org/example/documents/prevadzkovyPoriadok2025.pdf");
+            InputStream inputStream = getClass()
+                    .getResourceAsStream("/org/example/documents/prevadzkovyPoriadok2025.pdf");
             if (inputStream == null) {
                 System.err.println("PDF document not found!");
                 return;
@@ -77,6 +93,21 @@ public class DocumentRegistrationController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handleRegistration() {
+        if (documentSign.isSelected()) {
+            org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
+            if (dbManager.registerPerson(name, surname, email, phone, dateOfBirth)) {
+                switchScene("/org/example/fxml/RegistrationSuccess.fxml");
+            } else {
+                System.err.println("Database registration failed.");
+                // Optionally show alert
+            }
+        } else {
+            System.out.println("Document not signed!");
+            // Optionally show alert that checkbox must be checked
         }
     }
 

@@ -79,7 +79,8 @@ public class DatabaseManager {
                         "dateOfBirth TEXT NOT NULL" +
                         ");");
 
-                // set AUTOINCREMENT start so next id will be 1000, but don't decrease existing sequence
+                // set AUTOINCREMENT start so next id will be 1000, but don't decrease existing
+                // sequence
                 try {
                     try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
                         if (rsSeq.next()) {
@@ -93,7 +94,8 @@ public class DatabaseManager {
                         }
                     }
                 } catch (SQLException e) {
-                    // sqlite_sequence may not exist yet or permission issues; don't fail initialization
+                    // sqlite_sequence may not exist yet or permission issues; don't fail
+                    // initialization
                     System.err.println("Could not set AUTOINCREMENT start for person: " + e.getMessage());
                 }
 
@@ -128,7 +130,8 @@ public class DatabaseManager {
 
                     // set sqlite_sequence so next id >= 1000 (don't lower existing seq)
                     try {
-                        try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
+                        try (ResultSet rsSeq = stmt
+                                .executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
                             if (rsSeq.next()) {
                                 int seq = rsSeq.getInt("seq");
                                 if (seq < 999) {
@@ -139,7 +142,8 @@ public class DatabaseManager {
                             }
                         }
                     } catch (SQLException e) {
-                        System.err.println("Could not set AUTOINCREMENT start for person after migration: " + e.getMessage());
+                        System.err.println(
+                                "Could not set AUTOINCREMENT start for person after migration: " + e.getMessage());
                     }
 
                     conn.commit();
@@ -155,7 +159,8 @@ public class DatabaseManager {
                     ex.printStackTrace();
                 }
             } else {
-                // table exists and already has AUTOINCREMENT -> ensure sequence starts at 999 (don't lower current value)
+                // table exists and already has AUTOINCREMENT -> ensure sequence starts at 999
+                // (don't lower current value)
                 try {
                     try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
                         if (rsSeq.next()) {
@@ -255,6 +260,39 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public boolean recordAttendance(long personId) {
+        // First check if person exists
+        String checkPersonSql = "SELECT 1 FROM person WHERE idPerson = ?";
+        String insertAttendanceSql = "INSERT INTO attendance (idPerson, atendanceDay, attendanceStart) VALUES (?, ?, ?)";
+
+        try (Connection conn = getConnection();
+                PreparedStatement checkStmt = conn.prepareStatement(checkPersonSql)) {
+
+            checkStmt.setLong(1, personId);
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (!rs.next()) {
+                    System.out.println("Person with ID " + personId + " not found.");
+                    return false;
+                }
+            }
+
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertAttendanceSql)) {
+                java.time.LocalDateTime now = java.time.LocalDateTime.now();
+                insertStmt.setLong(1, personId);
+                insertStmt.setString(2, now.toLocalDate().toString());
+                insertStmt.setString(3, now.toLocalTime().toString());
+
+                int affectedRows = insertStmt.executeUpdate();
+                return affectedRows > 0;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error recording attendance: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 
