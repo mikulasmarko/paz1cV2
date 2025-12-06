@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.ResourceBundle;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
-import javafx.stage.StageStyle;
 
 public class MainScreenController {
 
@@ -49,6 +47,7 @@ public class MainScreenController {
         registrationButton.setOnAction(event -> switchScene("/org/example/fxml/RegistrationPage.fxml"));
         languageButton.setOnAction(event -> toggleLanguage());
         themeButton.setOnAction(event -> toggleTheme());
+        settingsButton.setOnAction(event -> switchScene("/org/example/fxml/Password.fxml"));
         applyTheme();
         updateLanguageButtonIcon();
         updateSettingsButtonIcon();

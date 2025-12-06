@@ -1,5 +1,7 @@
 package org.example.Controllers;
 
+import org.example.storage.DatabaseManager;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,9 +19,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.example.QrCode.QrCodeGeneratorDemo;
 import org.example.eMail.emailSender;
-import org.example.storage.DatabaseManager;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -49,7 +51,7 @@ public class DocumentRegistrationController {
     private java.time.LocalDate dateOfBirth;
 
     public void setPersonData(String name, String surname, String email, String phone,
-                              java.time.LocalDate dateOfBirth) {
+            java.time.LocalDate dateOfBirth) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -66,15 +68,42 @@ public class DocumentRegistrationController {
         ThemeManager.applyTheme(rootPane, null, buttons, checkBoxes);
 
         try {
-            // Load PDF document
-            InputStream inputStream = getClass()
-                    .getResourceAsStream("/org/example/documents/prevadzkovyPoriadok2025.pdf");
-            if (inputStream == null) {
-                System.err.println("PDF document not found!");
+            // Get current language
+            String language = Locale.getDefault().getLanguage();
+
+            // Get document path from DB
+            DatabaseManager dbManager = new DatabaseManager();
+            String documentPath = dbManager.getDocumentPath(language);
+
+            // Fallback to default if not found or if specific language is missing
+            if (documentPath == null) {
+                // Try 'sk' or some default
+                documentPath = dbManager.getDocumentPath("sk");
+            }
+
+            if (documentPath == null) {
+                System.err.println("No document found for language: " + language);
                 return;
             }
 
-            PDDocument document = PDDocument.load(inputStream);
+            // Load PDF document
+            // Try as resource first
+            InputStream inputStream = getClass().getResourceAsStream(documentPath);
+            PDDocument document;
+
+            if (inputStream != null) {
+                document = PDDocument.load(inputStream);
+            } else {
+                // Try as file path
+                java.io.File file = new java.io.File(documentPath);
+                if (file.exists()) {
+                    document = PDDocument.load(file);
+                } else {
+                    System.err.println("Document file not found at: " + documentPath);
+                    return;
+                }
+            }
+
             PDFRenderer renderer = new PDFRenderer(document);
 
             VBox pdfContainer = new VBox(10);
@@ -117,12 +146,10 @@ public class DocumentRegistrationController {
                             "S pozdravom,\n" +
                             "Tím Jump Arena";
                     emailSender.sendEmail(email, "Registrácia Jump Arena", body, qrPath);
-
-                    java.io.File qrFile = new java.io.File(qrPath);
-                    if (qrFile.delete()) {
-                        System.out.println("Temporary QR code file deleted.");
-                    } else {
-                        System.err.println("Failed to delete temporary QR code file.");
+                    // Optionally delete the QR code file after sending
+                    File qrFile = new File(qrPath);
+                    if (qrFile.exists()) {
+                        qrFile.delete();
                     }
                 }
 

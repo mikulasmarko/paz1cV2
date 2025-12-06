@@ -42,13 +42,39 @@ public class DocumentLoginController {
         ThemeManager.applyTheme(rootPane, null, buttons, checkBoxes);
 
         try {
-            // Load PDF document
-            InputStream inputStream = getClass().getResourceAsStream("/org/example/documents/prevadzkovyPoriadok2025.pdf");
-            if (inputStream == null) {
-                System.err.println("PDF document not found!");
+            // Get current language
+            String language = java.util.Locale.getDefault().getLanguage();
+
+            // Get document path from DB
+            org.example.storage.DatabaseManager dbManager = new org.example.storage.DatabaseManager();
+            String documentPath = dbManager.getDocumentPath(language);
+
+            // Fallback to default if not found or if specific language is missing
+            if (documentPath == null) {
+                documentPath = dbManager.getDocumentPath("sk");
+            }
+
+            if (documentPath == null) {
+                System.err.println("No document found for language: " + language);
                 return;
             }
-            PDDocument document = PDDocument.load(inputStream);
+
+            // Load PDF document
+            InputStream inputStream = getClass().getResourceAsStream(documentPath);
+            PDDocument document;
+
+            if (inputStream != null) {
+                document = PDDocument.load(inputStream);
+            } else {
+                java.io.File file = new java.io.File(documentPath);
+                if (file.exists()) {
+                    document = PDDocument.load(file);
+                } else {
+                    System.err.println("Document file not found at: " + documentPath);
+                    return;
+                }
+            }
+
             PDFRenderer renderer = new PDFRenderer(document);
 
             VBox pdfContainer = new VBox(10);
@@ -69,7 +95,7 @@ public class DocumentLoginController {
             document.close();
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

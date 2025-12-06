@@ -33,7 +33,7 @@ public class DatabaseManager {
     public long getPersonId(String email) {
         String query = "SELECT idPerson FROM person WHERE email = ?";
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, email);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -249,7 +249,8 @@ public class DatabaseManager {
             stmt.execute("CREATE TABLE IF NOT EXISTS document (" +
                     "idDocument INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "nameDoc TEXT NOT NULL," +
-                    "textDoc TEXT NOT NULL," +
+                    "pathDoc TEXT NOT NULL," +
+                    "language char(2) NOT NULL," +
                     "validityFrom TEXT NOT NULL," +
                     "validityTo TEXT" +
                     ");");
@@ -270,6 +271,12 @@ public class DatabaseManager {
                     "idLog INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "logWhatsGoingOn TEXT NOT NULL," +
                     "logDateTime TEXT NOT NULL" +
+                    ");");
+
+            // Admin Settings Table
+            stmt.execute("CREATE TABLE IF NOT EXISTS admin_settings (" +
+                    "key TEXT PRIMARY KEY," +
+                    "value TEXT NOT NULL" +
                     ");");
 
             System.out.println("Database initialized with full schema.");
@@ -308,6 +315,64 @@ public class DatabaseManager {
 
         } catch (SQLException e) {
             System.err.println("Error recording attendance: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public String getDocumentPath(String language) {
+        String query = "SELECT pathDoc FROM document WHERE language = ? ORDER BY idDocument DESC LIMIT 1";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, language);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("pathDoc");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean insertDocument(String name, String path, String language, String validFrom) {
+        String query = "INSERT INTO document (nameDoc, pathDoc, language, validityFrom) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, path);
+            pstmt.setString(3, language);
+            pstmt.setString(4, validFrom);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public String getAdminPassword() {
+        String query = "SELECT value FROM admin_settings WHERE key = 'admin_password'";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getString("value");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "admin"; // Default password
+    }
+
+    public boolean setAdminPassword(String newPassword) {
+        String query = "INSERT OR REPLACE INTO admin_settings (key, value) VALUES ('admin_password', ?)";
+        try (Connection conn = getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, newPassword);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

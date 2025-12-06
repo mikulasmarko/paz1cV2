@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="rootPane" alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AddDocumentController">
+   <children>
+      <Label text="Pridať nový dokument">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorLabel" textFill="RED" />
+      <VBox maxWidth="400.0" spacing="5.0">
+         <children>
+            <Label text="Názov dokumentu:" />
+            <TextField fx:id="nameField" promptText="Zadajte názov" />
+         </children>
+      </VBox>
+      <VBox maxWidth="400.0" spacing="5.0">
+         <children>
+            <Label text="Jazyk (kód, napr. sk, en):" />
+            <TextField fx:id="languageField" promptText="sk" />
+         </children>
+      </VBox>
+      <VBox maxWidth="400.0" spacing="5.0">
+         <children>
+            <Label text="Platnosť od:" />
+            <DatePicker fx:id="validFromPicker" maxWidth="1.7976931348623157E308" />
+         </children>
+      </VBox>
+      <VBox maxWidth="400.0" spacing="5.0">
+         <children>
+            <Label text="Platnosť do (nepovinné):" />
+            <DatePicker fx:id="validToPicker" maxWidth="1.7976931348623157E308" />
+         </children>
+      </VBox>
+      <VBox maxWidth="400.0" spacing="5.0">
+         <children>
+            <Label text="Súbor dokumentu (PDF):" />
+            <HBox spacing="10.0">
+               <children>
+                  <TextField fx:id="filePathField" editable="false" promptText="Žiadny súbor" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="chooseFileButton" mnemonicParsing="false" text="Vybrať..." />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" spacing="20.0">
+         <children>
+            <Button fx:id="cancelButton" mnemonicParsing="false" text="Zrušiť" />
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Uložiť" />
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>
