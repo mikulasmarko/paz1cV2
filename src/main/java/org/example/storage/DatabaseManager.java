@@ -59,15 +59,118 @@ public class DatabaseManager {
             // Enable Foreign Keys
             stmt.execute("PRAGMA foreign_keys = ON;");
 
-            // Person Table
-            stmt.execute("CREATE TABLE IF NOT EXISTS person (" +
-                    "idPerson INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name TEXT NOT NULL," +
-                    "surname TEXT NOT NULL," +
-                    "email TEXT NOT NULL," +
-                    "phone TEXT NOT NULL," +
-                    "dateOfBirth TEXT NOT NULL" +
-                    ");");
+            // Check if `person` table exists and whether it already has AUTOINCREMENT
+            String tableSql = null;
+            try (ResultSet rs = stmt.executeQuery(
+                    "SELECT sql FROM sqlite_master WHERE type='table' AND name='person'")) {
+                if (rs.next()) {
+                    tableSql = rs.getString("sql");
+                }
+            }
+
+            if (tableSql == null) {
+                // table doesn't exist -> create it with AUTOINCREMENT
+                stmt.execute("CREATE TABLE IF NOT EXISTS person (" +
+                        "idPerson INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        "name TEXT NOT NULL," +
+                        "surname TEXT NOT NULL," +
+                        "email TEXT NOT NULL," +
+                        "phone TEXT NOT NULL," +
+                        "dateOfBirth TEXT NOT NULL" +
+                        ");");
+
+                // set AUTOINCREMENT start so next id will be 1000, but don't decrease existing sequence
+                try {
+                    try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
+                        if (rsSeq.next()) {
+                            int seq = rsSeq.getInt("seq");
+                            if (seq < 999) {
+                                stmt.execute("UPDATE sqlite_sequence SET seq = 999 WHERE name='person'");
+                            }
+                        } else {
+                            // sqlite_sequence exists but no entry for person
+                            stmt.execute("INSERT INTO sqlite_sequence(name, seq) VALUES('person', 999);");
+                        }
+                    }
+                } catch (SQLException e) {
+                    // sqlite_sequence may not exist yet or permission issues; don't fail initialization
+                    System.err.println("Could not set AUTOINCREMENT start for person: " + e.getMessage());
+                }
+
+            } else if (!tableSql.toUpperCase().contains("AUTOINCREMENT")) {
+                // table exists but without AUTOINCREMENT -> migrate safely
+                System.out.println("Migrating existing person table to add AUTOINCREMENT primary key...");
+                try {
+                    conn.setAutoCommit(false);
+                    // disable foreign keys during migration
+                    stmt.execute("PRAGMA foreign_keys = OFF;");
+
+                    // create new table with AUTOINCREMENT
+                    stmt.execute("CREATE TABLE IF NOT EXISTS person_new (" +
+                            "idPerson INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "name TEXT NOT NULL," +
+                            "surname TEXT NOT NULL," +
+                            "email TEXT NOT NULL," +
+                            "phone TEXT NOT NULL," +
+                            "dateOfBirth TEXT NOT NULL" +
+                            ");");
+
+                    // copy data (preserve existing ids)
+                    stmt.execute("INSERT INTO person_new (idPerson, name, surname, email, phone, dateOfBirth) " +
+                            "SELECT idPerson, name, surname, email, phone, dateOfBirth FROM person;");
+
+                    // drop old table and rename new
+                    stmt.execute("DROP TABLE person;");
+                    stmt.execute("ALTER TABLE person_new RENAME TO person;");
+
+                    // re-enable foreign keys
+                    stmt.execute("PRAGMA foreign_keys = ON;");
+
+                    // set sqlite_sequence so next id >= 1000 (don't lower existing seq)
+                    try {
+                        try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
+                            if (rsSeq.next()) {
+                                int seq = rsSeq.getInt("seq");
+                                if (seq < 999) {
+                                    stmt.execute("UPDATE sqlite_sequence SET seq = 999 WHERE name='person'");
+                                }
+                            } else {
+                                stmt.execute("INSERT INTO sqlite_sequence(name, seq) VALUES('person', 999);");
+                            }
+                        }
+                    } catch (SQLException e) {
+                        System.err.println("Could not set AUTOINCREMENT start for person after migration: " + e.getMessage());
+                    }
+
+                    conn.commit();
+                    conn.setAutoCommit(true);
+                    System.out.println("Migration complete.");
+                } catch (SQLException ex) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException rbe) {
+                        System.err.println("Rollback failed: " + rbe.getMessage());
+                    }
+                    System.err.println("Error migrating person table: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            } else {
+                // table exists and already has AUTOINCREMENT -> ensure sequence starts at 999 (don't lower current value)
+                try {
+                    try (ResultSet rsSeq = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='person'")) {
+                        if (rsSeq.next()) {
+                            int seq = rsSeq.getInt("seq");
+                            if (seq < 999) {
+                                stmt.execute("UPDATE sqlite_sequence SET seq = 999 WHERE name='person'");
+                            }
+                        } else {
+                            stmt.execute("INSERT INTO sqlite_sequence(name, seq) VALUES('person', 999);");
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.err.println("Could not set AUTOINCREMENT start for person: " + e.getMessage());
+                }
+            }
 
             // Attendance Table
             stmt.execute("CREATE TABLE IF NOT EXISTS attendance (" +
