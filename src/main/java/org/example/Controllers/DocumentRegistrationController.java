@@ -49,7 +49,7 @@ public class DocumentRegistrationController {
     private java.time.LocalDate dateOfBirth;
 
     public void setPersonData(String name, String surname, String email, String phone,
-            java.time.LocalDate dateOfBirth) {
+                              java.time.LocalDate dateOfBirth) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -117,6 +117,13 @@ public class DocumentRegistrationController {
                             "S pozdravom,\n" +
                             "Tím Jump Arena";
                     emailSender.sendEmail(email, "Registrácia Jump Arena", body, qrPath);
+
+                    java.io.File qrFile = new java.io.File(qrPath);
+                    if (qrFile.delete()) {
+                        System.out.println("Temporary QR code file deleted.");
+                    } else {
+                        System.err.println("Failed to delete temporary QR code file.");
+                    }
                 }
 
                 switchScene("/org/example/fxml/RegistrationSuccess.fxml");
