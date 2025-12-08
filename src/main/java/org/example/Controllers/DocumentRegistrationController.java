@@ -151,6 +151,9 @@ public class DocumentRegistrationController {
                     if (qrFile.exists()) {
                         qrFile.delete();
                     }
+
+                    // Record attendance (arrival) automatically
+                    dbManager.recordAttendance(personId);
                 }
 
                 switchScene("/org/example/fxml/RegistrationSuccess.fxml");

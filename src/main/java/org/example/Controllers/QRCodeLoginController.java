@@ -60,6 +60,10 @@ public class QRCodeLoginController {
 
                 if (exists) {
                     System.out.println("User validated: " + personId);
+
+                    // Record attendance (arrival) automatically
+                    dbManager.recordAttendance(personId);
+
                     inputNumber.clear();
 
                     java.util.List<String> positions = dbManager.getPersonPositions(personId);
