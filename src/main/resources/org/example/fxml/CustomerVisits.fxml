@@ -28,7 +28,7 @@
         </HBox>
         <TableView fx:id="visitsTable" editable="true" prefHeight="400.0" prefWidth="600.0">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="%column.name" />
+                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="%column.customer_name" />
                 <TableColumn fx:id="surnameColumn" prefWidth="150.0" text="%column.surname" />
                 <TableColumn fx:id="startColumn" prefWidth="100.0" text="%column.start" />
                 <TableColumn fx:id="endColumn" prefWidth="100.0" text="%column.end" />

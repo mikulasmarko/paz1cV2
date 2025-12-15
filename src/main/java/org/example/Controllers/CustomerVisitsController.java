@@ -70,7 +70,7 @@ public class CustomerVisitsController {
         dbManager = new DatabaseManager();
 
         // Setup columns
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("customer_name"));
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
         startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));

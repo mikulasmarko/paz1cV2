@@ -12,24 +12,24 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" spacing="15.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.CustomerSearchController">
    <children>
-      <Label text="Vyhľadávanie zákazníka">
+      <Label fx:id="titleLabel" text="%label.search_customer_title">
          <font>
-            <Font size="24.0" />
+            <Font name="NeuzeitGro-Bol" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="searchField" maxWidth="400.0" promptText="Meno, Priezvisko alebo Email" />
+      <TextField fx:id="searchField" maxWidth="400.0" promptText="%prompt.search_customer" />
       <TableView fx:id="resultsTable" maxWidth="600.0" prefHeight="300.0">
         <columns>
-          <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
-          <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Meno" />
-          <TableColumn fx:id="surnameColumn" prefWidth="150.0" text="Priezvisko" />
-          <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
+          <TableColumn fx:id="idColumn" prefWidth="50.0" text="%column.id" />
+          <TableColumn fx:id="nameColumn" prefWidth="150.0" text="%column.customer_name" />
+          <TableColumn fx:id="surnameColumn" prefWidth="150.0" text="%column.surname" />
+          <TableColumn fx:id="emailColumn" prefWidth="200.0" text="%prompt.email" />
         </columns>
       </TableView>
       <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <Button fx:id="backButton" mnemonicParsing="false" text="Späť" />
-            <Button fx:id="editButton" mnemonicParsing="false" text="Upraviť" />
+            <Button fx:id="backButton" mnemonicParsing="false" text="%button.back" />
+            <Button fx:id="editButton" mnemonicParsing="false" text="%button.edit" />
          </children>
       </HBox>
    </children>

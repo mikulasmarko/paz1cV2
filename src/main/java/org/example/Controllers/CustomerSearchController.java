@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -24,6 +25,9 @@ public class CustomerSearchController {
 
     @FXML
     private VBox rootPane;
+
+    @FXML
+    private Label titleLabel;
 
     @FXML
     private TextField searchField;
@@ -51,7 +55,7 @@ public class CustomerSearchController {
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(editButton, backButton), null);
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel), Arrays.asList(editButton, backButton), null);
 
         // Configure Columns
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
