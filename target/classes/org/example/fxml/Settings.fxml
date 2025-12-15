@@ -8,20 +8,56 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" spacing="20.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.SettingsController">
    <children>
-      <Label text="Nastavenia">
+      <Label fx:id="titleLabel" text="%label.settings_title">
          <font>
-            <Font size="24.0" />
+            <Font name="NeuzeitGro-Bol" size="24.0" />
          </font>
       </Label>
-      <Button fx:id="addDocumentButton" mnemonicParsing="false" text="Pridať dokument" />
-      <Button fx:id="manageDocumentsButton" mnemonicParsing="false" text="%button.manage_documents" />
-      <Button fx:id="customerVisitsButton" mnemonicParsing="false" text="%button.customer_visits" />
-      <Button fx:id="changePasswordButton" mnemonicParsing="false" text="Zmeniť heslo" />
-      <Button fx:id="editCustomerButton" mnemonicParsing="false" text="Upraviť zákazníka" />
-      <Button fx:id="managePositionsButton" mnemonicParsing="false" text="Spravovať pozície" />
-      <Button fx:id="attendanceManagementButton" mnemonicParsing="false" text="Spravovať dochádzku" />
-      <Button fx:id="exitButton" mnemonicParsing="false" style="-fx-background-color: red; -fx-text-fill: white;" text="%button.exit" />
-      <Button fx:id="backButton" mnemonicParsing="false" text="Späť" />
+      <Button fx:id="addDocumentButton" mnemonicParsing="false" text="%button.add_document">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="manageDocumentsButton" mnemonicParsing="false" text="%button.manage_documents">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="customerVisitsButton" mnemonicParsing="false" text="%button.customer_visits">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="changePasswordButton" mnemonicParsing="false" text="%button.change_password">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="editCustomerButton" mnemonicParsing="false" text="%button.edit_customer">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="managePositionsButton" mnemonicParsing="false" text="%button.manage_positions">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="attendanceManagementButton" mnemonicParsing="false" text="%button.attendance_management">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitButton" mnemonicParsing="false" style="-fx-background-color: red; -fx-text-fill: white;" text="%button.exit">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="backButton" mnemonicParsing="false" text="%button.back">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

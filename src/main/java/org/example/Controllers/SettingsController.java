@@ -2,6 +2,7 @@ package org.example.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -44,9 +45,12 @@ public class SettingsController {
     private Button backButton;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
     void initialize() {
         // Apply theme
-        ThemeManager.applyTheme(rootPane, null,
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel),
                 Arrays.asList(addDocumentButton, manageDocumentsButton, customerVisitsButton, changePasswordButton,
                         editCustomerButton,
                         managePositionsButton,

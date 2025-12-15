@@ -28,11 +28,14 @@ public class PasswordController {
     private Button btnBack;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
     private Label errorLabel;
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(btnEnter, btnBack), null);
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel), Arrays.asList(btnEnter, btnBack), null);
 
         btnEnter.setOnAction(event -> handleLogin());
         btnBack.setOnAction(event -> switchScene("/org/example/fxml/MainScreen.fxml"));
@@ -50,7 +53,8 @@ public class PasswordController {
         if (adminPass.equals(password)) {
             switchScene("/org/example/fxml/Settings.fxml");
         } else {
-            errorLabel.setText("Nesprávne heslo!");
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+            errorLabel.setText(bundle.getString("error.invalid_password"));
             passwordField.clear();
         }
     }

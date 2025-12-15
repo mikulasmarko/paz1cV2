@@ -37,17 +37,31 @@ public class ChangePasswordController {
     private Button cancelButton;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label oldPasswordLabel;
+
+    @FXML
+    private Label newPasswordLabel;
+
+    @FXML
+    private Label confirmPasswordLabel;
+
+    @FXML
     private Label errorLabel;
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(saveButton, cancelButton), null);
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, oldPasswordLabel, newPasswordLabel, confirmPasswordLabel, errorLabel),
+                Arrays.asList(saveButton, cancelButton), null);
 
         saveButton.setOnAction(event -> handleSave());
         cancelButton.setOnAction(event -> switchScene("/org/example/fxml/Settings.fxml"));
     }
 
     private void handleSave() {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         String oldPass = oldPasswordField.getText();
         String newPass = newPasswordField.getText();
         String confirmPass = confirmPasswordField.getText();
@@ -56,24 +70,24 @@ public class ChangePasswordController {
         String currentAdminPass = db.getAdminPassword();
 
         if (!currentAdminPass.equals(oldPass)) {
-            showError("Staré heslo je nesprávne!");
+            showError(bundle.getString("error.old_password_incorrect"));
             return;
         }
 
         if (newPass.isEmpty()) {
-            showError("Nové heslo nesmie byť prázdne!");
+            showError(bundle.getString("error.new_password_empty"));
             return;
         }
 
         if (!newPass.equals(confirmPass)) {
-            showError("Nové heslá sa nezhodujú!");
+            showError(bundle.getString("error.passwords_do_not_match"));
             return;
         }
 
         if (db.setAdminPassword(newPass)) {
             switchScene("/org/example/fxml/Settings.fxml");
         } else {
-            showError("Nastala chyba pri ukladaní hesla.");
+            showError(bundle.getString("error.password_save_failed"));
         }
     }
 

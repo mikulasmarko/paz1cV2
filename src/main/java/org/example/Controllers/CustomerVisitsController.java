@@ -35,7 +35,12 @@ public class CustomerVisitsController {
     private DatePicker datePicker;
 
     @FXML
+    private Label dateLabel;
+
+    @FXML
     private TableView<AttendanceRecord> visitsTable;
+
+
 
     @FXML
     private TableColumn<AttendanceRecord, String> nameColumn;
@@ -110,7 +115,7 @@ public class CustomerVisitsController {
         refreshButton.setOnAction(event -> loadVisits(datePicker.getValue()));
 
         // Theme
-        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel),
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, dateLabel),
                 Arrays.asList(backButton, addVisitButton, refreshButton), null);
 
         // Load initial data
@@ -125,7 +130,8 @@ public class CustomerVisitsController {
     }
 
     private void showInvalidTimeAlert() {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Nesprávny formát času. Zadajte čas vo formáte HH:mm.",
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+        Alert alert = new Alert(Alert.AlertType.ERROR, bundle.getString("error.invalid_time_format"),
                 ButtonType.OK);
         alert.showAndWait();
     }

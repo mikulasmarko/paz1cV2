@@ -51,8 +51,29 @@ public class AddDocumentController {
     private Label errorLabel;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label languageLabel;
+
+    @FXML
+    private Label validFromLabel;
+
+    @FXML
+    private Label validToLabel;
+
+    @FXML
+    private Label fileLabel;
+
+    @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(chooseFileButton, saveButton, cancelButton), null);
+        ThemeManager.applyTheme(rootPane,
+                Arrays.asList(titleLabel, nameLabel, languageLabel, validFromLabel, validToLabel, fileLabel),
+                Arrays.asList(chooseFileButton, saveButton, cancelButton),
+                null);
 
         chooseFileButton.setOnAction(event -> chooseFile());
         saveButton.setOnAction(event -> saveDocument());
@@ -73,9 +94,10 @@ public class AddDocumentController {
         String name = nameField.getText();
         String language = languageField.getText();
         String filePath = filePathField.getText();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
         if (name.isEmpty() || language.isEmpty() || filePath.isEmpty() || validFromPicker.getValue() == null) {
-            errorLabel.setText("Chyba: Chýbajú povinné údaje.");
+            errorLabel.setText(bundle.getString("error.missing_fields"));
             return;
         }
 
@@ -86,10 +108,10 @@ public class AddDocumentController {
         if (db.insertDocument(name, filePath, language, validFrom, validTo)) {
             // Success - maybe show confirmation or just redirect?
             // Since requirements moved away from popups, let's just redirect.
-            System.out.println("Document saved successfully");
+            System.out.println(bundle.getString("msg.document_saved"));
             switchScene("/org/example/fxml/Settings.fxml");
         } else {
-            errorLabel.setText("Chyba: Nepodarilo sa uložiť do databázy.");
+            errorLabel.setText(bundle.getString("error.database_save"));
         }
     }
 

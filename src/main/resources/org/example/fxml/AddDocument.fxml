@@ -11,51 +11,83 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" spacing="15.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AddDocumentController">
    <children>
-      <Label text="Pridať nový dokument">
+      <Label fx:id="titleLabel" text="%label.add_document_title">
          <font>
-            <Font size="24.0" />
+            <Font name="NeuzeitGro-Bol" size="24.0" />
          </font>
       </Label>
       <Label fx:id="errorLabel" textFill="RED" />
       <VBox maxWidth="400.0" spacing="5.0">
          <children>
-            <Label text="Názov dokumentu:" />
-            <TextField fx:id="nameField" promptText="Zadajte názov" />
+            <Label fx:id="nameLabel" text="%label.document_name">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="nameField" promptText="%prompt.document_name" />
          </children>
       </VBox>
       <VBox maxWidth="400.0" spacing="5.0">
          <children>
-            <Label text="Jazyk (kód, napr. sk, en):" />
-            <TextField fx:id="languageField" promptText="sk" />
+            <Label fx:id="languageLabel" text="%label.document_language">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="languageField" promptText="%prompt.document_language" />
          </children>
       </VBox>
       <VBox maxWidth="400.0" spacing="5.0">
          <children>
-            <Label text="Platnosť od:" />
+            <Label fx:id="validFromLabel" text="%label.valid_from">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Label>
             <DatePicker fx:id="validFromPicker" maxWidth="1.7976931348623157E308" />
          </children>
       </VBox>
       <VBox maxWidth="400.0" spacing="5.0">
          <children>
-            <Label text="Platnosť do (nepovinné):" />
+            <Label fx:id="validToLabel" text="%label.valid_to">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Label>
             <DatePicker fx:id="validToPicker" maxWidth="1.7976931348623157E308" />
          </children>
       </VBox>
       <VBox maxWidth="400.0" spacing="5.0">
          <children>
-            <Label text="Súbor dokumentu (PDF):" />
+            <Label fx:id="fileLabel" text="%label.document_file">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Label>
             <HBox spacing="10.0">
                <children>
-                  <TextField fx:id="filePathField" editable="false" promptText="Žiadny súbor" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="chooseFileButton" mnemonicParsing="false" text="Vybrať..." />
+                  <TextField fx:id="filePathField" editable="false" promptText="%prompt.document_file" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="chooseFileButton" mnemonicParsing="false" text="%button.choose_file">
+                     <font>
+                        <Font name="NeuzeitGro-Bol" size="12.0" />
+                     </font>
+                  </Button>
                </children>
             </HBox>
          </children>
       </VBox>
       <HBox alignment="CENTER" spacing="20.0">
          <children>
-            <Button fx:id="cancelButton" mnemonicParsing="false" text="Zrušiť" />
-            <Button fx:id="saveButton" mnemonicParsing="false" text="Uložiť" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" text="%button.cancel">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="saveButton" mnemonicParsing="false" text="%button.save">
+               <font>
+                  <Font name="NeuzeitGro-Bol" size="12.0" />
+               </font>
+            </Button>
          </children>
          <padding>
             <Insets top="20.0" />
