@@ -29,6 +29,12 @@ public class AttendanceManagementController {
     private VBox rootPane;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label selectMonthLabel;
+
+    @FXML
     private DatePicker monthPicker;
 
     @FXML
@@ -71,7 +77,7 @@ public class AttendanceManagementController {
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, Arrays.asList(statusLabel),
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, selectMonthLabel, statusLabel),
                 Arrays.asList(refreshButton, generatePdfButton, addRecordButton, deleteRecordButton, backButton), null);
 
         monthPicker.setValue(LocalDate.now());
@@ -125,7 +131,8 @@ public class AttendanceManagementController {
     }
 
     private void showInvalidTimeAlert() {
-        new Alert(Alert.AlertType.ERROR, "Nesprávny formát času. Zadajte čas vo formáte HH:mm.", ButtonType.OK)
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+        new Alert(Alert.AlertType.ERROR, bundle.getString("error.invalid_time_format"), ButtonType.OK)
                 .showAndWait();
     }
 
@@ -135,18 +142,19 @@ public class AttendanceManagementController {
 
     private void deleteSelectedRecord() {
         AttendanceRecord selected = attendanceTable.getSelectionModel().getSelectedItem();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         if (selected == null) {
-            statusLabel.setText("Vyberte záznam na vymazanie.");
+            statusLabel.setText(bundle.getString("msg.select_record_delete"));
             statusLabel.setStyle("-fx-text-fill: orange;");
             return;
         }
 
         if (dbManager.deleteAttendance(selected.getIdAttendance())) {
-            statusLabel.setText("Záznam vymazaný.");
+            statusLabel.setText(bundle.getString("msg.record_deleted"));
             statusLabel.setStyle("-fx-text-fill: green;");
             loadData();
         } else {
-            statusLabel.setText("Chyba pri mazaní záznamu.");
+            statusLabel.setText(bundle.getString("error.delete_failed"));
             statusLabel.setStyle("-fx-text-fill: red;");
         }
     }
@@ -162,12 +170,13 @@ public class AttendanceManagementController {
     }
 
     private void updateRecord(AttendanceRecord record) {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         if (dbManager.updateAttendance(record.getIdAttendance(), record.getStart(), record.getEnd())) {
-            statusLabel.setText("Záznam aktualizovaný.");
+            statusLabel.setText(bundle.getString("msg.record_updated"));
             statusLabel.setStyle("-fx-text-fill: green;");
             loadData(); // Sort
         } else {
-            statusLabel.setText("Chyba pri aktualizácii.");
+            statusLabel.setText(bundle.getString("error.update_failed"));
             statusLabel.setStyle("-fx-text-fill: red;");
             loadData(); // Revert on failure
         }
@@ -175,6 +184,7 @@ public class AttendanceManagementController {
 
     private void generatePdf() {
         LocalDate selectedDate = monthPicker.getValue();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
         javafx.stage.DirectoryChooser directoryChooser = new javafx.stage.DirectoryChooser();
         directoryChooser.setTitle("Vyberte priečinok pre uloženie PDF");
@@ -226,14 +236,20 @@ public class AttendanceManagementController {
                 final int Y_START = 700;
                 final int ROW_HEIGHT = 20;
                 int[] colWidths = { 150, 100, 70, 70, 70 };
-                String[] headers = { "Meno", "Dátum", "Príchod", "Odchod", "Hodiny" };
+                String[] headers = {
+                        bundle.getString("pdf.header.name"),
+                        bundle.getString("pdf.header.date"),
+                        bundle.getString("pdf.header.arrival"),
+                        bundle.getString("pdf.header.departure"),
+                        bundle.getString("pdf.header.hours")
+                };
 
                 try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
                     // Title
                     contentStream.setFont(mainFont, 16);
                     contentStream.beginText();
                     contentStream.newLineAtOffset(MARGIN, Y_START + 30);
-                    contentStream.showText("Dochádzka: " + personName + " - " + selectedDate.getMonth() + " "
+                    contentStream.showText(bundle.getString("pdf.title") + " " + personName + " - " + selectedDate.getMonth() + " "
                             + selectedDate.getYear());
                     contentStream.endText();
 
@@ -286,26 +302,26 @@ public class AttendanceManagementController {
                     contentStream.setFont(mainFont, 12);
                     contentStream.beginText();
                     contentStream.newLineAtOffset(MARGIN, y);
-                    contentStream.showText("Súhrn:");
+                    contentStream.showText(bundle.getString("pdf.summary"));
                     contentStream.endText();
                     y -= 15;
                     contentStream.setFont(mainFont, 12);
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(MARGIN, y);
-                    contentStream.showText("Celkom odpracované hodiny: " + formatDuration(totalHours));
+                    contentStream.showText(bundle.getString("pdf.total_hours") + " " + formatDuration(totalHours));
                     contentStream.endText();
                     y -= 15;
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(MARGIN, y);
-                    contentStream.showText("Z toho Sobota: " + formatDuration(saturdayHours));
+                    contentStream.showText(bundle.getString("pdf.saturday_hours") + " " + formatDuration(saturdayHours));
                     contentStream.endText();
                     y -= 15;
 
                     contentStream.beginText();
                     contentStream.newLineAtOffset(MARGIN, y);
-                    contentStream.showText("Z toho Nedeľa: " + formatDuration(sundayHours));
+                    contentStream.showText(bundle.getString("pdf.sunday_hours") + " " + formatDuration(sundayHours));
                     contentStream.endText();
                 }
 
@@ -321,10 +337,11 @@ public class AttendanceManagementController {
         if (errors.length() > 0) {
             statusLabel.setText("Chyby pri generovaní.");
             statusLabel.setStyle("-fx-text-fill: red;");
-            new Alert(Alert.AlertType.ERROR, "Niektoré súbory sa nepodarilo vytvoriť:\n" + errors.toString())
+            new Alert(Alert.AlertType.ERROR, bundle.getString("error.pdf_generation_failed") + errors.toString())
                     .showAndWait();
         } else {
-            statusLabel.setText("Vygenerovaných " + successCount + " súborov.");
+            java.text.MessageFormat formatter = new java.text.MessageFormat(bundle.getString("msg.pdf_generated"));
+            statusLabel.setText(formatter.format(new Object[]{successCount}));
             statusLabel.setStyle("-fx-text-fill: green;");
         }
     }

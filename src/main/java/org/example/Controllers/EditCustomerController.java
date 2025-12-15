@@ -61,13 +61,34 @@ public class EditCustomerController {
     private Button backButton;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label surnameLabel;
+
+    @FXML
+    private Label emailLabel;
+
+    @FXML
+    private Label phoneLabel;
+
+    @FXML
+    private Label dobLabel;
+
+    @FXML
+    private Label positionsLabel;
+
+    @FXML
     private Label errorLabel;
 
     private Person person;
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null,
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, nameLabel, surnameLabel, emailLabel, phoneLabel, dobLabel, positionsLabel, errorLabel),
                 Arrays.asList(saveButton, resendQrButton, backButton, addPositionButton, removePositionButton), null);
 
         saveButton.setOnAction(event -> handleSave());
@@ -119,7 +140,8 @@ public class EditCustomerController {
         if (db.updatePerson(person)) {
             switchScene("/org/example/fxml/CustomerSearch.fxml");
         } else {
-            errorLabel.setText("Chyba pri ukladaní údajov.");
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+            errorLabel.setText(bundle.getString("error.save_failed"));
         }
     }
 
@@ -145,8 +167,9 @@ public class EditCustomerController {
 
         // Visual feedback? For now, maybe change button text temporarily or just update
         // label
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         errorLabel.setStyle("-fx-text-fill: green;");
-        errorLabel.setText("QR kód bol odoslaný.");
+        errorLabel.setText(bundle.getString("msg.qr_sent"));
     }
 
     private void handleAddPosition() {
@@ -155,12 +178,13 @@ public class EditCustomerController {
         String selected = availablePositionsCombo.getValue();
         if (selected != null) {
             DatabaseManager db = new DatabaseManager();
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
             if (db.addPersonPosition(person.getId(), selected)) {
                 loadPersonPositions();
-                errorLabel.setText("Pozícia pridaná.");
+                errorLabel.setText(bundle.getString("msg.position_added"));
                 errorLabel.setStyle("-fx-text-fill: green;");
             } else {
-                errorLabel.setText("Chyba - asi už existuje.");
+                errorLabel.setText(bundle.getString("error.position_exists"));
                 errorLabel.setStyle("-fx-text-fill: red;");
             }
         }
@@ -172,12 +196,13 @@ public class EditCustomerController {
         String selected = currentPositionsListView.getSelectionModel().getSelectedItem();
         if (selected != null) {
             DatabaseManager db = new DatabaseManager();
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
             if (db.removePersonPosition(person.getId(), selected)) {
                 loadPersonPositions();
-                errorLabel.setText("Pozícia odobraná.");
+                errorLabel.setText(bundle.getString("msg.position_removed"));
                 errorLabel.setStyle("-fx-text-fill: green;");
             } else {
-                errorLabel.setText("Chyba pri odoberaní.");
+                errorLabel.setText(bundle.getString("error.remove_failed"));
                 errorLabel.setStyle("-fx-text-fill: red;");
             }
         }

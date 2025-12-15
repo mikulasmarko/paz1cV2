@@ -12,74 +12,122 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" spacing="15.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.EditCustomerController">
    <children>
-      <Label text="Upraviť zákazníka">
+      <Label fx:id="titleLabel" text="%label.edit_customer_title">
          <font>
-            <Font size="24.0" />
+            <Font name="NeuzeitGro-Bol" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="errorLabel" textFill="RED" />
+      <Label fx:id="errorLabel" textFill="RED">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Label>
       
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Meno:" />
-            <TextField fx:id="nameField" />
-         </children>
-      </VBox>
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Priezvisko:" />
-            <TextField fx:id="surnameField" />
-         </children>
-      </VBox>
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Email:" />
-            <TextField fx:id="emailField" />
-         </children>
-      </VBox>
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Telefón:" />
-            <TextField fx:id="phoneField" />
-         </children>
-      </VBox>
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Dátum narodenia (RRRR-MM-DD):" />
-            <TextField fx:id="dobField" />
-         </children>
-      </VBox>
-      <VBox maxWidth="300.0" spacing="5.0">
-         <children>
-            <Label text="Pracovné pozície:" />
-             <!-- Add new position -->
-            <HBox spacing="10.0">
-               <children>
-                  <javafx.scene.control.ComboBox fx:id="availablePositionsCombo" promptText="Vyber pozíciu" />
-                  <Button fx:id="addPositionButton" mnemonicParsing="false" text="Pridať" />
-               </children>
-            </HBox>
-             <!-- Current positions list -->
-             <javafx.scene.control.ListView fx:id="currentPositionsListView" prefHeight="100.0" />
-             <Button fx:id="removePositionButton" mnemonicParsing="false" text="Odobrať označenú" />
-         </children>
-      </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="nameLabel" text="%column.customer_name">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+             <TextField fx:id="nameField" />
+          </children>
+       </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="surnameLabel" text="%column.surname">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+             <TextField fx:id="surnameField" />
+          </children>
+       </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="emailLabel" text="%prompt.email">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+             <TextField fx:id="emailField" />
+          </children>
+       </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="phoneLabel" text="%prompt.phone">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+             <TextField fx:id="phoneField" />
+          </children>
+       </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="dobLabel" text="%prompt.birthdate">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+             <TextField fx:id="dobField" />
+          </children>
+       </VBox>
+       <VBox maxWidth="300.0" spacing="5.0">
+          <children>
+             <Label fx:id="positionsLabel" text="%label.work_positions">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Label>
+              <!-- Add new position -->
+             <HBox spacing="10.0">
+                <children>
+                   <javafx.scene.control.ComboBox fx:id="availablePositionsCombo" promptText="%prompt.select_position" />
+                   <Button fx:id="addPositionButton" mnemonicParsing="false" text="%button.add">
+                      <font>
+                         <Font name="NeuzeitGro-Bol" size="12.0" />
+                      </font>
+                   </Button>
+                </children>
+             </HBox>
+              <!-- Current positions list -->
+              <javafx.scene.control.ListView fx:id="currentPositionsListView" prefHeight="100.0" />
+              <Button fx:id="removePositionButton" mnemonicParsing="false" text="%button.remove_selected">
+                 <font>
+                    <Font name="NeuzeitGro-Bol" size="12.0" />
+                 </font>
+              </Button>
+          </children>
+       </VBox>
 
-      <HBox alignment="CENTER" spacing="20.0">
-         <children>
-            <Button fx:id="resendQrButton" mnemonicParsing="false" text="Znovu poslať QR" />
-         </children>
-         <padding>
-            <Insets bottom="10.0" top="10.0" />
-         </padding>
-      </HBox>
+       <HBox alignment="CENTER" spacing="20.0">
+          <children>
+             <Button fx:id="resendQrButton" mnemonicParsing="false" text="%button.resend_qr">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Button>
+          </children>
+          <padding>
+             <Insets bottom="10.0" top="10.0" />
+          </padding>
+       </HBox>
 
-      <HBox alignment="CENTER" spacing="20.0">
-         <children>
-            <Button fx:id="backButton" mnemonicParsing="false" text="Späť" />
-            <Button fx:id="saveButton" mnemonicParsing="false" text="Uložiť" />
-         </children>
-      </HBox>
+       <HBox alignment="CENTER" spacing="20.0">
+          <children>
+             <Button fx:id="backButton" mnemonicParsing="false" text="%button.back">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Button>
+             <Button fx:id="saveButton" mnemonicParsing="false" text="%button.save">
+                <font>
+                   <Font name="NeuzeitGro-Bol" size="12.0" />
+                </font>
+             </Button>
+          </children>
+       </HBox>
    </children>
    <padding>
       <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />

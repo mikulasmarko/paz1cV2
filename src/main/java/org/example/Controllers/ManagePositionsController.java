@@ -23,6 +23,9 @@ public class ManagePositionsController {
     private VBox rootPane;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
     private ListView<String> positionListView;
 
     @FXML
@@ -44,7 +47,7 @@ public class ManagePositionsController {
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, null, Arrays.asList(addButton, deleteButton, backButton), null);
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, statusLabel), Arrays.asList(addButton, deleteButton, backButton), null);
         loadPositions();
 
         addButton.setOnAction(event -> handleAdd());
@@ -63,10 +66,12 @@ public class ManagePositionsController {
             if (dbManager.addPosition(newPos)) {
                 newPositionField.clear();
                 loadPositions();
-                statusLabel.setText("Pozícia pridaná.");
+                ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+                statusLabel.setText(bundle.getString("msg.position_added"));
                 statusLabel.setStyle("-fx-text-fill: green;");
             } else {
-                statusLabel.setText("Chyba pri pridaní (duplikát?).");
+                ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+                statusLabel.setText(bundle.getString("error.position_add_failed"));
                 statusLabel.setStyle("-fx-text-fill: red;");
             }
         }
@@ -77,14 +82,17 @@ public class ManagePositionsController {
         if (selected != null) {
             if (dbManager.deletePosition(selected)) {
                 loadPositions();
-                statusLabel.setText("Pozícia vymazaná.");
+                ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+                statusLabel.setText(bundle.getString("msg.position_deleted"));
                 statusLabel.setStyle("-fx-text-fill: green;");
             } else {
-                statusLabel.setText("Nemožno vymazať (asi sa používa).");
+                ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+                statusLabel.setText(bundle.getString("error.position_delete_failed"));
                 statusLabel.setStyle("-fx-text-fill: red;");
             }
         } else {
-            statusLabel.setText("Označte pozíciu na vymazanie.");
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+            statusLabel.setText(bundle.getString("msg.select_position_delete"));
             statusLabel.setStyle("-fx-text-fill: orange;");
         }
     }
