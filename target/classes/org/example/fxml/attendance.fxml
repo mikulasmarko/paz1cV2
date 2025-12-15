@@ -8,22 +8,38 @@
 
 <VBox fx:id="rootPane" alignment="CENTER" spacing="20.0" styleClass="bodybg" stylesheets="@fxmlStyle/backgroudStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controllers.AttendanceController">
    <children>
-      <Label text="Dochádzkový systém">
+      <Label fx:id="titleLabel" text="%label.attendance_system_title">
          <font>
-            <Font size="36.0" />
+            <Font name="NeuzeitGro-Bol" size="36.0" />
          </font>
       </Label>
-      <Label fx:id="welcomeLabel" text="Vitajte">
+      <Label fx:id="welcomeLabel" text="%label.welcome">
          <font>
-            <Font size="18.0" />
+            <Font name="NeuzeitGro-Bol" size="18.0" />
          </font>
       </Label>
       
-      <Button fx:id="arrivalButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Príchod" />
-      <Button fx:id="departureButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Odchod" />
+      <Button fx:id="arrivalButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="%button.arrival">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="departureButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="%button.departure">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
       
-      <Button fx:id="logoutButton" mnemonicParsing="false" text="Odhlásiť" />
-      <Label fx:id="statusLabel" />
+      <Button fx:id="logoutButton" mnemonicParsing="false" text="%button.logout">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="statusLabel">
+         <font>
+            <Font name="NeuzeitGro-Bol" size="12.0" />
+         </font>
+      </Label>
    </children>
    <padding>
       <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

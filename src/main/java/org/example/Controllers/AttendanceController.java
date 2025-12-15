@@ -20,6 +20,9 @@ public class AttendanceController {
     private VBox rootPane;
 
     @FXML
+    private Label titleLabel;
+
+    @FXML
     private Label welcomeLabel;
 
     @FXML
@@ -38,7 +41,7 @@ public class AttendanceController {
 
     @FXML
     void initialize() {
-        ThemeManager.applyTheme(rootPane, Arrays.asList(welcomeLabel),
+        ThemeManager.applyTheme(rootPane, Arrays.asList(titleLabel, welcomeLabel, statusLabel),
                 Arrays.asList(arrivalButton, departureButton, logoutButton), null);
 
         arrivalButton.setOnAction(event -> handleArrival());
@@ -51,27 +54,30 @@ public class AttendanceController {
         // Optionally fetch person name to greet properly
         // DatabaseManager db = new DatabaseManager();
         // Person p = db.getPerson(personId); ...
-        welcomeLabel.setText("Vitajte, ID: " + personId);
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+        welcomeLabel.setText(bundle.getString("label.welcome") + ", ID: " + personId);
     }
 
     private void handleArrival() {
         DatabaseManager db = new DatabaseManager();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         if (db.recordAttendance(personId)) {
-            statusLabel.setText("Príchod zaznamenaný.");
+            statusLabel.setText(bundle.getString("msg.arrival_recorded"));
             statusLabel.setStyle("-fx-text-fill: green;");
         } else {
-            statusLabel.setText("Chyba pri zázname príchodu.");
+            statusLabel.setText(bundle.getString("error.arrival_failed"));
             statusLabel.setStyle("-fx-text-fill: red;");
         }
     }
 
     private void handleDeparture() {
         DatabaseManager db = new DatabaseManager();
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
         if (db.recordDeparture(personId)) {
-            statusLabel.setText("Odchod zaznamenaný.");
+            statusLabel.setText(bundle.getString("msg.departure_recorded"));
             statusLabel.setStyle("-fx-text-fill: green;");
         } else {
-            statusLabel.setText("Nie je otvorený žiaden príchod.");
+            statusLabel.setText(bundle.getString("error.no_arrival"));
             statusLabel.setStyle("-fx-text-fill: orange;");
         }
     }
