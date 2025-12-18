@@ -113,7 +113,7 @@ public class RegistrationScreenController {
             return false;
         }
 
-        if (new org.example.storage.DatabaseManager().isEmailExists(emailField.getText())) {
+        if (new org.example.storage.DatabaseManager().EmailExists(emailField.getText())) {
             showError("error.email_exists");
             return false;
         }

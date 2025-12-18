@@ -6,12 +6,12 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.property.LongProperty;
 
 public class AttendanceRecord {
-    private final LongProperty idAttendance;
-    private final StringProperty name;
-    private final StringProperty surname;
-    private final StringProperty day;
-    private final StringProperty start;
-    private final StringProperty end;
+    private  LongProperty idAttendance;
+    private  StringProperty name;
+    private  StringProperty surname;
+    private  StringProperty day;
+    private  StringProperty start;
+    private  StringProperty end;
 
     public AttendanceRecord(long idAttendance, String name, String surname, String day, String start, String end) {
         this.idAttendance = new SimpleLongProperty(idAttendance);

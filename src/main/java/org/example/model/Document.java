@@ -1,12 +1,12 @@
 package org.example.model;
 
 public class Document {
-    private long id;
-    private String name;
-    private String path;
-    private String language;
-    private String validityFrom;
-    private String validityTo;
+    private final long id;
+    private final String name;
+    private final String path;
+    private final String language;
+    private final String validityFrom;
+    private final String validityTo;
 
     public Document(long id, String name, String path, String language, String validityFrom, String validityTo) {
         this.id = id;
